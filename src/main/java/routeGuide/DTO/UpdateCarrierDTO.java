@@ -13,7 +13,5 @@ public class UpdateCarrierDTO {
 
     private String carrierCode;
 
-    private int carrierUserId;
-
     private String contactEmail;
 }

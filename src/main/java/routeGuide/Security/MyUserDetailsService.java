@@ -5,18 +5,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import routeGuide.entities.User;
-import routeGuide.repository.UserRepository;
+import routeGuide.entities.Carrier;
+import routeGuide.repository.CarrierRepository;
+
 
 import java.util.Optional;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
+    private CarrierRepository carrierRepository;
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<User> user = Optional.ofNullable(userRepository.findByUserName(userName));
+        Optional<Carrier> user = Optional.ofNullable(carrierRepository.findByUserName(userName));
         if (user == null) {
             throw new UsernameNotFoundException("user notFound");
         }

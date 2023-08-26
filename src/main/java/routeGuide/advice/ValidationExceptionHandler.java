@@ -1,5 +1,7 @@
 package routeGuide.advice;
 
+import jakarta.validation.UnexpectedTypeException;
+import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,4 +26,24 @@ public class ValidationExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
+    @ExceptionHandler(SpelEvaluationException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(SpelEvaluationException ex) {
+        List<String> errors = Collections.singletonList(ex.getLocalizedMessage());
+
+//                .collect(Collectors.toList());
+
+        ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidationException(UnexpectedTypeException ex) {
+        List<String> errors = Collections.singletonList("its must not be null "+ ex.getLocalizedMessage());
+
+//                .collect(Collectors.toList());
+
+        ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
 }

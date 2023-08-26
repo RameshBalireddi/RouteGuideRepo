@@ -2,20 +2,22 @@ package routeGuide.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import routeGuide.DTO.LoadDTO;
 import routeGuide.Enum.LoadStatus;
 
 @Entity
 @Data
 @Table(name="loads")
+@NoArgsConstructor
 public class Load {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private long originCode;
+    private String originCode;
 
-    private long destinationCode;
+    private String destinationCode;
 
     private double mileage;
 

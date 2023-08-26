@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import routeGuide.Enum.UserRole;
-import routeGuide.entities.User;
+import routeGuide.entities.Carrier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +15,7 @@ public  class ApplicationUser implements UserDetails {
     private String userName;
     private String password;
     private List<GrantedAuthority> authorities;
-    public ApplicationUser(User user) {
+    public ApplicationUser(Carrier user) {
         this.userId = user.getId();
         this.userName = user.getUserName();
         this.password = user.getPassword();

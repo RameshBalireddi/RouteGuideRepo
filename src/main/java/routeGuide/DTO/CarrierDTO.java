@@ -1,8 +1,13 @@
 package routeGuide.DTO;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import routeGuide.Enum.UserRole;
+import routeGuide.entities.Carrier;
 
 @Data
 public class CarrierDTO {
@@ -12,11 +17,16 @@ public class CarrierDTO {
     @NotNull
     private String carrierCode;
 
-    @NotNull
-    private int carrierUserId;
 
     @Email
     private String contactEmail;
+
+    @NotNull
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
 
 
 }

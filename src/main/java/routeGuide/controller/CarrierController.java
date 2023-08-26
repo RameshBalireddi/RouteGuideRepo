@@ -3,6 +3,8 @@ package routeGuide.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.web.bind.annotation.*;
 import routeGuide.APIResponse.APIResponse;
 import routeGuide.DTO.CarrierDTO;
@@ -27,12 +29,22 @@ public class CarrierController {
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
     }
 
-
-
     @DeleteMapping("carrier")
     public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable int carrierId){
 
         return  carrierService.deleteCarrier(carrierId);
+    }
+
+    @GetMapping("carrier")
+    public  ResponseEntity<APIResponse> getCarriers(){
+
+        return  carrierService.getCarrier();
+    }
+    @PreAuthorize("hasAuthority(ADMIN)")
+    @GetMapping("carriers/list")
+    public  ResponseEntity<APIResponse> getAllCarriers(){
+
+        return  carrierService.getAllCarriers();
     }
 
 }

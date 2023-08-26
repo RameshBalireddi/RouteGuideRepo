@@ -1,41 +1,50 @@
 package routeGuide.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
+import routeGuide.Enum.UserRole;
 
 @Data
 @Entity
 @Table(name="carriers")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Carrier {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    @Column(unique = true)
+    private String userName;
 
     @Column(unique = true)
     private String code;
 
     private String contactEmail;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String password;
 
-    public Carrier(CarrierDTO carrierDTO, User user) {
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
-        this.name=carrierDTO.getCarrierName();
+    public Carrier(CarrierDTO carrierDTO) {
+
+        this.userName=carrierDTO.getCarrierName();
         this.code=carrierDTO.getCarrierCode();
         this.contactEmail=carrierDTO.getContactEmail();
-        this.user=user;
+        this.password= carrierDTO.getPassword();
+        this.role=carrierDTO.getRole();
 
     }
 
-    public Carrier(UpdateCarrierDTO updateCarrierDTO, User user1) {
+    public Carrier(UpdateCarrierDTO updateCarrierDTO) {
         if(updateCarrierDTO.getCarrierName()==null) {
-            this.name = updateCarrierDTO.getCarrierName();
+            this.userName = updateCarrierDTO.getCarrierName();
         }
         if(updateCarrierDTO.getCarrierCode()==null) {
             this.code = updateCarrierDTO.getCarrierCode();
@@ -43,8 +52,6 @@ public class Carrier {
         if(updateCarrierDTO.getContactEmail()==null) {
             this.contactEmail = updateCarrierDTO.getContactEmail();
         }
-        if(user==null) {
-            this.user = user1;
-        }
+
     }
 }

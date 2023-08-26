@@ -1,28 +1,29 @@
 package routeGuide.DTO;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import routeGuide.Enum.LoadStatus;
 
 @Data
 public class LoadDTO {
 
-    @NotNull
-    @Size(min = 5,message = "enter at least 5 numbers ")
-    private long originCode;
-
-    @NotNull
-    @Size(min = 5,message = "enter at least 5 numbers ")
-    private long destinationCode;
-
-    @NotNull
-    private double mileage;
-    @NotNull
-    private double ratePerMile;
-    @NotNull
+    @NotNull(message = " carrierId must not be null ")
     private int carrierId;
 
-    @NotNull
+
+    @Pattern(regexp = "\\d{5,}", message = "Origin code must have at least 5 digits")
+    private String originCode;
+
+
+    @Pattern(regexp = "\\d{5,}", message = "Origin destination code must have at least 5 digits")
+    private String  destinationCode;
+
+    @NotNull(message = " mileage must not be null ")
+    private double mileage;
+    @NotNull(message = " ratePerMile must not be null ")
+    private double ratePerMile;
+    @NotNull(message = " status must not be null ")
     private LoadStatus status;
 }
