@@ -1,46 +1,62 @@
 package routeGuide.service;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import routeGuide.APIResponse.APIResponse;
 import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
+import routeGuide.Enum.UserRole;
 import routeGuide.Response.CarrierResponse;
 import routeGuide.Security.ObjectUtil;
 import routeGuide.entities.Carrier;
 import routeGuide.repository.CarrierRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CarrierService {
 
 
-
     @Autowired
     CarrierRepository carrierRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public ResponseEntity<APIResponse> addCarrier(CarrierDTO carrierDTO) {
 
-        Carrier carrierName= carrierRepository.findByUserName(carrierDTO.getCarrierName());
-        if(carrierName!=null){
-            return  APIResponse.errorBadRequest("given name is already registered enter new name");
+        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
+        if (carrierName != null) {
+            return APIResponse.errorBadRequest("given name is already registered enter new name");
         }
 
-       Carrier carrierCode= carrierRepository.findByCode(carrierDTO.getCarrierCode());
-       if(carrierCode!=null){
-           return  APIResponse.errorBadRequest("carrier code already registered enter new code");
-       }
-       Carrier carrierEmail=carrierRepository.findByContactEmail(carrierDTO.getContactEmail());
-        if(carrierEmail!=null){
-            return  APIResponse.errorBadRequest("given email is already registered enter new email");
+        Carrier carrierCode = carrierRepository.findByCode(carrierDTO.getCarrierCode());
+        if (carrierCode != null) {
+            return APIResponse.errorBadRequest("carrier code already registered enter new code");
         }
-        Carrier carrier=new Carrier(carrierDTO);
-         carrierRepository.save(carrier);
-        return  APIResponse.successCreate("carrier added successfully ",carrier);
+        Carrier carrierEmail = carrierRepository.findByContactEmail(carrierDTO.getContactEmail());
+        if (carrierEmail != null) {
+            return APIResponse.errorBadRequest("given email is already registered enter new email");
+        }
+        Carrier carrier = new Carrier(carrierDTO);
+        carrierRepository.save(carrier);
+        return APIResponse.successCreate("carrier added successfully ", carrier);
     }
-
 
 
     public ResponseEntity<APIResponse> deleteCarrier(int carrierId) {
@@ -59,37 +75,109 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO) {
 
-        Carrier user=  carrierRepository.findById(ObjectUtil.getCarrierId()).orElse(null);
+        Carrier user = carrierRepository.findById(ObjectUtil.getCarrierId()).orElse(null);
 
-        if(ObjectUtil.getCarrierId()!=updateCarrierDTO.getCarrierId()  || (!user.getRole().equals("ADMIN")) ){
+        if (ObjectUtil.getCarrierId() != updateCarrierDTO.getCarrierId() || (!user.getRole().equals("ADMIN"))) {
             return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
         }
 
-        Carrier carrier=new Carrier(updateCarrierDTO);
+        Carrier carrier = new Carrier(updateCarrierDTO);
         carrierRepository.save(carrier);
-        return  APIResponse.successCreate("carrier added successfully ",carrier);
+        return APIResponse.successCreate("carrier added successfully ", carrier);
 
     }
 
-     public ResponseEntity<APIResponse> getCarrier(){
+    public ResponseEntity<APIResponse> getCarrier() {
 
-        Carrier carrier=carrierRepository.findById(ObjectUtil.getCarrierId()).orElse(null);
+        Carrier carrier = carrierRepository.findById(ObjectUtil.getCarrierId()).orElse(null);
 
-       if(carrier==null){
-           return  APIResponse.errorBadRequest("you don't have any carrier");
-       }
-       CarrierResponse carrierResponse=new CarrierResponse(carrier);
-       return  APIResponse.success("carriers : ",carrierResponse);
-     }
+        if (carrier == null) {
+            return APIResponse.errorBadRequest("you don't have any carrier");
+        }
+        CarrierResponse carrierResponse = new CarrierResponse(carrier);
+        return APIResponse.success("carriers : ", carrierResponse);
+    }
 
-       public ResponseEntity<APIResponse> getAllCarriers(){
+    public ResponseEntity<APIResponse> getAllCarriers() {
 
-        List<Carrier> carrierList=carrierRepository.findAll();
+        List<Carrier> carrierList = carrierRepository.findAll();
 
-        if(carrierList.isEmpty()){
-            return  APIResponse.errorBadRequest("currently don't have any carriers");
-         }
-        List<CarrierResponse> carrierResponses=carrierList.stream().map(c-> new CarrierResponse(c)).collect(Collectors.toList());
-        return  APIResponse.success("carriers : ",carrierResponses);
-     }
+        if (carrierList.isEmpty()) {
+            return APIResponse.errorBadRequest("currently don't have any carriers");
+        }
+        List<CarrierResponse> carrierResponses = carrierList.stream().map(c -> new CarrierResponse(c)).collect(Collectors.toList());
+        return APIResponse.success("carriers : ", carrierResponses);
+    }
+
+
+    public ResponseEntity<APIResponse> saveCarriers(InputStream inputStream, String fileType) throws IOException {
+        boolean firstLine = true;
+
+        if (fileType.endsWith("xlsx")) {
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+
+                Integer carrierId = (int) row.getCell(0).getNumericCellValue();
+                String carrierName = row.getCell(1).getStringCellValue();
+                String carrierCode = row.getCell(2).getStringCellValue();
+                String carrierEmail = row.getCell(3).getStringCellValue();
+                String carrierPassword = row.getCell(4).getStringCellValue();
+                UserRole carrierRole = UserRole.valueOf(row.getCell(5).getStringCellValue());
+
+                // Check for duplicates based on code, email, and username
+                Carrier existingCarrierWithCode = carrierRepository.findByCode(carrierCode);
+                Carrier existingCarrierWithEmail = carrierRepository.findByContactEmail(carrierEmail);
+                Carrier existingCarrierWithUserName = carrierRepository.findByUserName(carrierName);
+
+                if (existingCarrierWithCode != null || existingCarrierWithEmail != null || existingCarrierWithUserName != null) {
+
+                    continue;
+                }
+
+                Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
+                if (carrier==null) {
+                    carrier = new Carrier();
+                    carrier.setId(carrierId);
+                }
+                carrier.setUserName(carrierName);
+                carrier.setCode(carrierCode);
+                carrier.setContactEmail(carrierEmail);
+                carrier.setPassword(bCryptPasswordEncoder.encode(carrierPassword));
+                carrier.setRole(carrierRole);
+
+                carrierRepository.save(carrier);
+            }
+        }
+        return APIResponse.success("File uploaded successfully", fileType);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

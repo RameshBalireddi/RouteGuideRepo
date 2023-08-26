@@ -1,11 +1,16 @@
 package routeGuide.service;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import routeGuide.APIResponse.APIResponse;
 import routeGuide.DTO.LoadDTO;
 import routeGuide.DTO.UpdateLoadDTO;
+import routeGuide.Enum.LoadStatus;
+import routeGuide.Enum.UserRole;
 import routeGuide.Response.CarrierResponse;
 import routeGuide.Response.LoadResponse;
 import routeGuide.Security.ObjectUtil;
@@ -14,6 +19,9 @@ import routeGuide.entities.Load;
 import routeGuide.repository.CarrierRepository;
 import routeGuide.repository.LoadRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,6 +129,56 @@ public class LoadService {
         }
         List<LoadResponse> loadResponses=loads.stream().map(l-> new LoadResponse(l)).collect(Collectors.toList());
         return  APIResponse.success("carriers : ",loadResponses);
+    }
+
+
+    public ResponseEntity<APIResponse> saveLoads(InputStream inputStream, String fileType) throws IOException {
+        boolean firstLine = true;
+
+        if (fileType.endsWith("xlsx")) {
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+
+                Integer loadId = (int) row.getCell(0).getNumericCellValue();
+                String originCode = String.valueOf((long) row.getCell(1).getNumericCellValue());
+                String destinationCode = String.valueOf((long) row.getCell(2).getNumericCellValue());
+                Double mileage = row.getCell(3).getNumericCellValue();
+                Double ratePerMile = row.getCell(4).getNumericCellValue();
+                Integer carrierId = (int) row.getCell(5).getNumericCellValue();
+                LoadStatus loadStatus = LoadStatus.valueOf(row.getCell(6).getStringCellValue());
+
+
+                Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
+                if (carrier==null) {
+                    continue;
+                }
+
+                Load load = loadRepository.findById(loadId).orElse(null);
+                if (load==null) {
+                    load = new Load();
+                    load.setId(loadId);
+                }
+
+//                load.setId(loadId);
+                load.setOriginCode(originCode);
+                load.setDestinationCode(destinationCode);
+                load.setMileage(mileage);
+                load.setRatePerMile(ratePerMile);
+                load.setCarrier(carrier);
+                load.setStatus(loadStatus);
+
+
+                loadRepository.save(load);
+            }
+        }
+        return APIResponse.success("File uploaded successfully", fileType);
     }
 
 }

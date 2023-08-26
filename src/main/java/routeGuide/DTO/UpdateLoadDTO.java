@@ -25,4 +25,5 @@ public class UpdateLoadDTO {
     private int carrierId;
 
     private LoadStatus status;
+
 }
