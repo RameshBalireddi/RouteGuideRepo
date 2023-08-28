@@ -27,6 +27,7 @@ public class Load {
     @JoinColumn(name = "carrierId")
     private Carrier carrier;
 
+    @Enumerated(EnumType.STRING)
     private LoadStatus status;
 
     public Load(LoadDTO loadDTO, Carrier carrier) {

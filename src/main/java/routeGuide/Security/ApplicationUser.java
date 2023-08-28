@@ -6,21 +6,25 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import routeGuide.Enum.UserRole;
 import routeGuide.entities.Carrier;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public  class ApplicationUser implements UserDetails {
     private int userId;
     private String userName;
     private String password;
-    private List<GrantedAuthority> authorities;
+      private List<GrantedAuthority> authorities;
     public ApplicationUser(Carrier user) {
         this.userId = user.getId();
         this.userName = user.getUserName();
         this.password = user.getPassword();
-        UserRole role = user.getRole();
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
+
+
+       this.authorities = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

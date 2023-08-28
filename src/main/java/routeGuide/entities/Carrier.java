@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
 import routeGuide.Enum.UserRole;
@@ -32,15 +34,6 @@ public class Carrier {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public Carrier(CarrierDTO carrierDTO) {
-
-        this.userName=carrierDTO.getCarrierName();
-        this.code=carrierDTO.getCarrierCode();
-        this.contactEmail=carrierDTO.getContactEmail();
-        this.password= carrierDTO.getPassword();
-        this.role=carrierDTO.getRole();
-
-    }
 
     public Carrier(UpdateCarrierDTO updateCarrierDTO) {
         if(updateCarrierDTO.getCarrierName()==null) {

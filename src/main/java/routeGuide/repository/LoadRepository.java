@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface LoadRepository extends JpaRepository<Load,Integer> {
 
-    @Query(value = "select * from loads where user_id=:userId",nativeQuery = true)
+    @Query(value = "select * from loads where carrier_id=:userId",nativeQuery = true)
     List<Load> findByUserId(@Param(("userId")) int userId);
 }

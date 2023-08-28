@@ -1,8 +1,11 @@
 package routeGuide.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +15,7 @@ import routeGuide.DTO.UpdateCarrierDTO;
 import routeGuide.service.CarrierService;
 
 import java.io.IOException;
+import java.rmi.server.ExportException;
 
 @RestController
 public class CarrierController {
@@ -21,7 +25,7 @@ public class CarrierController {
     private CarrierService carrierService;
 
 
-    @PostMapping("carrier/create")
+    @PostMapping("carrier/signup")
        public ResponseEntity<APIResponse> addCarrier(@RequestBody @Valid CarrierDTO carrierDTO){
        return  carrierService.addCarrier(carrierDTO);
     }
@@ -42,15 +46,21 @@ public class CarrierController {
 
         return  carrierService.getCarrier();
     }
-    @PreAuthorize("hasAuthority(ADMIN)")
-    @GetMapping("carriers/list")
-    public  ResponseEntity<APIResponse> getAllCarriers(){
 
-        return  carrierService.getAllCarriers();
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("carriers/list")
+    public  ResponseEntity<APIResponse> getAllCarriers() {
+        try {
+            return carrierService.getAllCarriers();
+        } catch (AccessDeniedException e) {
+            e.getMessage();
+        }
+
+     return  null;
     }
 
 
-    @PostMapping("/import/carrier")
+    @PostMapping("/carrier/import")
     public ResponseEntity<APIResponse> uploadCarriers(@RequestParam("file") MultipartFile file) {
         try {
             String fileType = getFileExtension(file.getOriginalFilename());
@@ -74,6 +84,18 @@ public class CarrierController {
             return fileName.substring(lastDotIndex + 1);
         }
         return "";
+    }
+
+    @GetMapping("carrier/export")
+    public void exportLoads(HttpServletResponse response) throws Exception {
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=carriers.xlsx");
+
+            carrierService.exportCarriers(response);
+        } catch (ExportException f) {
+          f.getMessage();
+        }
     }
 
 

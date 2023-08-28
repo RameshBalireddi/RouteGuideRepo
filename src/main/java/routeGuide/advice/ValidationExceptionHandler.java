@@ -2,12 +2,15 @@ package routeGuide.advice;
 
 import jakarta.validation.UnexpectedTypeException;
 import org.springframework.expression.spel.SpelEvaluationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import routeGuide.APIResponse.APIResponse;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +33,6 @@ public class ValidationExceptionHandler {
     public ResponseEntity<ValidationErrorResponse> handleValidationException(SpelEvaluationException ex) {
         List<String> errors = Collections.singletonList(ex.getLocalizedMessage());
 
-//                .collect(Collectors.toList());
-
         ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -41,9 +42,9 @@ public class ValidationExceptionHandler {
     public ResponseEntity<ValidationErrorResponse> handleValidationException(UnexpectedTypeException ex) {
         List<String> errors = Collections.singletonList("its must not be null "+ ex.getLocalizedMessage());
 
-//                .collect(Collectors.toList());
-
         ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
         return ResponseEntity.badRequest().body(errorResponse);
     }
+
+
 }

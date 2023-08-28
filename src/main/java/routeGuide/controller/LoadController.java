@@ -1,8 +1,15 @@
 package routeGuide.controller;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import routeGuide.APIResponse.APIResponse;
@@ -30,7 +37,7 @@ public class LoadController {
         return loadService.updateLoad(updateLoadDTO);
     }
 
-   @DeleteMapping("/{loadId}")
+   @DeleteMapping("load/{loadId}")
    public ResponseEntity<APIResponse> deleteLoadById(@PathVariable int loadId){
        return loadService.deleteLoadById(loadId);
    }
@@ -39,8 +46,13 @@ public class LoadController {
    public ResponseEntity<APIResponse> getLoads(){
        return loadService.getLoads();
    }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("loads/list")
+    public ResponseEntity<APIResponse> getAllLoads(){
+        return loadService.getAllLoads();
+    }
 
-    @PostMapping("import/load")
+    @PostMapping("load/import")
     public ResponseEntity<APIResponse> uploadLoads(@RequestParam("file") MultipartFile file) {
         try {
             String fileType = getFileExtension(file.getOriginalFilename());
@@ -63,5 +75,21 @@ public class LoadController {
         }
         return "";
     }
+
+    @GetMapping("load/export")
+    public void exportLoads(HttpServletResponse response) throws Exception {
+        try {
+
+
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", "attachment; filename=loads.xlsx");
+
+            loadService.exportLoads(response);
+        } catch (FileUploadException f) {
+           f.getMessage();
+        }
+    }
+
+
 
 }

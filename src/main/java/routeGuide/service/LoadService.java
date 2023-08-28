@@ -1,9 +1,16 @@
 package routeGuide.service;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import routeGuide.APIResponse.APIResponse;
@@ -19,6 +26,7 @@ import routeGuide.entities.Load;
 import routeGuide.repository.CarrierRepository;
 import routeGuide.repository.LoadRepository;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -130,6 +138,17 @@ public class LoadService {
         List<LoadResponse> loadResponses=loads.stream().map(l-> new LoadResponse(l)).collect(Collectors.toList());
         return  APIResponse.success("carriers : ",loadResponses);
     }
+    public ResponseEntity<APIResponse> getAllLoads(){
+
+        List<Load> loads=loadRepository.findAll();
+
+        if(loads.isEmpty()){
+            return  APIResponse.errorBadRequest("you don't have any loads");
+        }
+        List<LoadResponse> loadResponses=loads.stream().map(l-> new LoadResponse(l)).collect(Collectors.toList());
+        return  APIResponse.success("carriers : ",loadResponses);
+    }
+
 
 
     public ResponseEntity<APIResponse> saveLoads(InputStream inputStream, String fileType) throws IOException {
@@ -154,6 +173,9 @@ public class LoadService {
                 Integer carrierId = (int) row.getCell(5).getNumericCellValue();
                 LoadStatus loadStatus = LoadStatus.valueOf(row.getCell(6).getStringCellValue());
 
+                if (!originCode.matches("\\d{5,}") || !destinationCode.matches("\\d{5,}")) {
+                                      continue;
+                }
 
                 Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
                 if (carrier==null) {
@@ -180,5 +202,46 @@ public class LoadService {
         }
         return APIResponse.success("File uploaded successfully", fileType);
     }
+
+
+
+
+    public void exportLoads(HttpServletResponse response) throws IOException {
+        List<Load> loads = loadRepository.findAll(); // Retrieve the data from the database
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Loads");
+
+        // Create a header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Load ID");
+        headerRow.createCell(1).setCellValue("Origin Code");
+        headerRow.createCell(2).setCellValue("Destination Code");
+        headerRow.createCell(3).setCellValue("Mileage");
+        headerRow.createCell(4).setCellValue("Rate Per Mile");
+        headerRow.createCell(5).setCellValue("Carrier");
+        headerRow.createCell(6).setCellValue("Status");
+
+        // Populate the rows with data
+        int rowNum = 1;
+        for (Load load : loads) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(load.getId());
+            row.createCell(1).setCellValue(load.getOriginCode());
+            row.createCell(2).setCellValue(load.getDestinationCode());
+            row.createCell(3).setCellValue(load.getMileage());
+            row.createCell(4).setCellValue(load.getRatePerMile());
+            row.createCell(5).setCellValue(load.getCarrier().getId()); // Replace with appropriate carrier field
+            row.createCell(6).setCellValue(load.getStatus().toString());
+        }
+
+        ServletOutputStream ops=response.getOutputStream();
+        workbook.write(ops);
+        workbook.close();
+        ops.close();
+
+    }
+
+
 
 }

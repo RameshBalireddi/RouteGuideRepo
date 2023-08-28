@@ -1,5 +1,7 @@
 package routeGuide.service;
 
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -53,9 +55,21 @@ public class CarrierService {
         if (carrierEmail != null) {
             return APIResponse.errorBadRequest("given email is already registered enter new email");
         }
-        Carrier carrier = new Carrier(carrierDTO);
-        carrierRepository.save(carrier);
-        return APIResponse.successCreate("carrier added successfully ", carrier);
+
+
+
+            Carrier carrier = new Carrier();
+            carrier.setUserName(carrierDTO.getCarrierName());
+            carrier.setCode(carrierDTO.getCarrierCode());
+            carrier.setContactEmail(carrierDTO.getContactEmail());
+
+            String encodedPassword = bCryptPasswordEncoder.encode(carrierDTO.getPassword());
+            carrier.setPassword(encodedPassword);
+
+            carrier.setRole(carrierDTO.getRole());
+
+           carrierRepository.save(carrier);
+        return APIResponse.successCreate("carrier added successfully ", carrierDTO);
     }
 
 
@@ -113,7 +127,7 @@ public class CarrierService {
     public ResponseEntity<APIResponse> saveCarriers(InputStream inputStream, String fileType) throws IOException {
         boolean firstLine = true;
 
-        if (fileType.endsWith("xlsx")) {
+//        if (fileType.endsWith("xlsx")) {
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -154,8 +168,45 @@ public class CarrierService {
 
                 carrierRepository.save(carrier);
             }
-        }
+//        }
         return APIResponse.success("File uploaded successfully", fileType);
+    }
+
+
+    public void exportCarriers(HttpServletResponse response) throws IOException {
+        List<Carrier> carriers = carrierRepository.findAll(); // Retrieve carrier data from the database
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Carriers");
+
+        // Create a header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Carrier ID");
+        headerRow.createCell(1).setCellValue("Carrier Name");
+        headerRow.createCell(2).setCellValue("Carrier Code");
+        headerRow.createCell(3).setCellValue("Carrier Email");
+        headerRow.createCell(4).setCellValue("Carrier Role");
+
+        // Populate the rows with carrier data
+        int rowNum = 1;
+        for (Carrier carrier : carriers) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(carrier.getId());
+            row.createCell(1).setCellValue(carrier.getUserName());
+            row.createCell(2).setCellValue(carrier.getCode());
+            row.createCell(3).setCellValue(carrier.getContactEmail());
+            row.createCell(4).setCellValue(carrier.getRole().toString());
+        }
+
+        // Get the ServletOutputStream from the response
+        ServletOutputStream outputStream = response.getOutputStream();
+
+        // Write the workbook data to the output stream
+        workbook.write(outputStream);
+
+        // Close the workbook and output stream
+        workbook.close();
+        outputStream.close();
     }
 
 }

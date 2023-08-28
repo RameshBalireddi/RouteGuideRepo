@@ -1,15 +1,22 @@
 package routeGuide.APIResponse;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class APIResponse {
 
     private boolean success;
     private String message;
     private Object data;
+
+
+
 
     public static ResponseEntity<APIResponse> success(String message, Object data){
         APIResponse apiResponse=new APIResponse();
@@ -58,6 +65,14 @@ public class APIResponse {
         apiResponse.setMessage(message);
         apiResponse.setData(null);
         return ResponseEntity.ok(apiResponse);
+    }
+
+    public static ResponseEntity<APIResponse> errorForbidden(String message) {
+        APIResponse apiResponse=new APIResponse();
+        apiResponse.setSuccess(false);
+        apiResponse.setMessage(message);
+        apiResponse.setData(null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
     }
 
     public boolean isSuccess() {
