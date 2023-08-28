@@ -32,8 +32,8 @@ public class CarrierController {
     }
 
     @GetMapping("/carrier/login")
-    public ResponseEntity<APIResponse> carrierLogin(@RequestBody LoginDTO loginDTO){
-        return  carrierService.loginCarrier(loginDTO);
+    public ResponseEntity<APIResponse> carrierLogin(@RequestBody LoginDTO loginDTO) {
+        return carrierService.loginCarrier(loginDTO);
     }
     @PutMapping("carrier/update")
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
@@ -41,9 +41,9 @@ public class CarrierController {
     }
 
     @DeleteMapping("carrier")
-    public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable int carrierId){
+    public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable String code){
 
-        return  carrierService.deleteCarrier(carrierId);
+        return  carrierService.deleteCarrier(code);
     }
 
     @GetMapping("carrier")

@@ -16,13 +16,13 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private CarrierRepository carrierRepository;
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Optional<Carrier> user = Optional.ofNullable(carrierRepository.findByUserName(userName));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Carrier> user = Optional.ofNullable(carrierRepository.findByContactEmail(email));
         if (user == null) {
             throw new UsernameNotFoundException("user notFound");
         }
         return user.map(ApplicationUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found" + userName));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found" + email));
     }
 
 }

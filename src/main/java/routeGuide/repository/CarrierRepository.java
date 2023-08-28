@@ -18,5 +18,5 @@ public interface CarrierRepository extends JpaRepository<Carrier, Integer> {
 
     Carrier findByUserName(String userName);
 
-  Carrier findByContactEmail(String contactEmail);
+    Carrier findByContactEmail(String contactEmail);
 }

@@ -23,15 +23,14 @@ import routeGuide.repository.CarrierRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CarrierService {
 
-
+  @Autowired
+  JwtService jwtService;
     @Autowired
     CarrierRepository carrierRepository;
 
@@ -75,9 +74,9 @@ public class CarrierService {
     }
 
 
-    public ResponseEntity<APIResponse> deleteCarrier(int carrierId) {
+    public ResponseEntity<APIResponse> deleteCarrier(String code) {
 
-        Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
+        Carrier carrier = carrierRepository.findByCode(code);
 
         if (carrier == null) {
             return APIResponse.errorBadRequest("carrier Id is not found enter valid carrier Id");
@@ -86,12 +85,12 @@ public class CarrierService {
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         carrierRepository.delete(carrier);
-        return APIResponse.success("carrier delete successfully ", carrierId);
+        return APIResponse.success("carrier delete successfully ", carrier.getUserName());
     }
 
     public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO) {
 
-        Carrier user = carrierRepository.findById(ObjectUtil.getCarrierId()).orElse(null);
+          Carrier user = carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
 
         if (ObjectUtil.getCarrierId() != updateCarrierDTO.getCarrierId() || (!user.getRole().equals("ADMIN"))) {
             return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
@@ -211,7 +210,6 @@ public class CarrierService {
         outputStream.close();
     }
 
-
     public ResponseEntity<APIResponse> loginCarrier(LoginDTO loginDTO) {
         Carrier carrier = carrierRepository.findByUserName(loginDTO.getUserName());
 
@@ -219,13 +217,23 @@ public class CarrierService {
             return APIResponse.errorBadRequest("Invalid user");
         }
 
-        // Use Spring Security's password encoder to verify the password
         if (passwordEncoder.matches(loginDTO.getPassword(), carrier.getPassword())) {
-            return APIResponse.success("Login successful", loginDTO);
+            // Generate tokens
+            Map<String, String> tokens = jwtService.generateTokens(loginDTO.getUserName());
+
+            // Construct response
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("accessToken", tokens.get("accessToken"));
+            responseData.put("refreshToken", tokens.get("refreshToken"));
+
+            return APIResponse.success("Login successful", responseData);
         }
 
         return APIResponse.errorBadRequest("User unauthorized");
     }
+
+
+
 }
 
 

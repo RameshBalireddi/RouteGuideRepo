@@ -12,6 +12,7 @@ public class ObjectUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof ApplicationUser) {
             Carrier authenticationCarrier = (Carrier) authentication.getPrincipal();
+
             return authenticationCarrier;
         }
         return null;
