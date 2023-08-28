@@ -25,7 +25,7 @@ public class CarrierController {
     private CarrierService carrierService;
 
 
-    @PostMapping("carrier/signup")
+    @PostMapping("/carrier/signup")
        public ResponseEntity<APIResponse> addCarrier(@RequestBody @Valid CarrierDTO carrierDTO){
        return  carrierService.addCarrier(carrierDTO);
     }

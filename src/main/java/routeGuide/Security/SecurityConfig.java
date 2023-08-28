@@ -62,7 +62,7 @@ public class SecurityConfig {
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/carrier/signUp").permitAll()
+            .requestMatchers("/carrier/signup").permitAll()
             .requestMatchers("/carrier/list").hasAuthority("ADMIN")
             .anyRequest().authenticated()
             .and()
