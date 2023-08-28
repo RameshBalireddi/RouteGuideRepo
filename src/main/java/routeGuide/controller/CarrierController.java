@@ -33,7 +33,7 @@ public class CarrierController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<APIResponse> carrierLogin(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<APIResponse> carrierLogin(@RequestBody  @Valid  LoginDTO loginDTO) {
         return carrierService.loginCarrier(loginDTO);
     }
     @PutMapping("/update")

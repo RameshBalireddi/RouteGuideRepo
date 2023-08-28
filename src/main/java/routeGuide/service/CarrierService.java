@@ -221,7 +221,7 @@ public class CarrierService {
     }
 
     public ResponseEntity<APIResponse> loginCarrier(LoginDTO loginDTO) {
-        Carrier carrier = carrierRepository.findByUserName(loginDTO.getUserName());
+        Carrier carrier = carrierRepository.findByContactEmail(loginDTO.getEmail());
 
         if (carrier == null) {
             return APIResponse.errorBadRequest("Invalid user");
@@ -229,7 +229,7 @@ public class CarrierService {
 
         if (passwordEncoder.matches(loginDTO.getPassword(), carrier.getPassword())) {
             // Generate tokens
-            Map<String, String> tokens = jwtService.generateTokens(loginDTO.getUserName());
+            Map<String, String> tokens = jwtService.generateTokens(loginDTO.getEmail());
 
             // Construct response
             Map<String, Object> responseData = new HashMap<>();
