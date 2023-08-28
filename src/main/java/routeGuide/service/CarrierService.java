@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import routeGuide.APIResponse.APIResponse;
 import routeGuide.DTO.CarrierDTO;
+import routeGuide.DTO.LoginDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
 import routeGuide.Enum.UserRole;
 import routeGuide.Response.CarrierResponse;
@@ -69,6 +70,7 @@ public class CarrierService {
             carrier.setRole(carrierDTO.getRole());
 
            carrierRepository.save(carrier);
+
         return APIResponse.successCreate("carrier added successfully ", carrierDTO);
     }
 
@@ -209,6 +211,21 @@ public class CarrierService {
         outputStream.close();
     }
 
+
+    public ResponseEntity<APIResponse> loginCarrier(LoginDTO loginDTO) {
+        Carrier carrier = carrierRepository.findByUserName(loginDTO.getUserName());
+
+        if (carrier == null) {
+            return APIResponse.errorBadRequest("Invalid user");
+        }
+
+        // Use Spring Security's password encoder to verify the password
+        if (passwordEncoder.matches(loginDTO.getPassword(), carrier.getPassword())) {
+            return APIResponse.success("Login successful", loginDTO);
+        }
+
+        return APIResponse.errorBadRequest("User unauthorized");
+    }
 }
 
 

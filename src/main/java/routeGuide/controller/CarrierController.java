@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import routeGuide.APIResponse.APIResponse;
 import routeGuide.DTO.CarrierDTO;
+import routeGuide.DTO.LoginDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
 import routeGuide.service.CarrierService;
 
@@ -30,6 +31,10 @@ public class CarrierController {
        return  carrierService.addCarrier(carrierDTO);
     }
 
+    @GetMapping("/carrier/login")
+    public ResponseEntity<APIResponse> carrierLogin(@RequestBody LoginDTO loginDTO){
+        return  carrierService.loginCarrier(loginDTO);
+    }
     @PutMapping("carrier/update")
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
