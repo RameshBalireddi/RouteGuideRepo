@@ -69,31 +69,18 @@ public class LoadService {
      }
 
     public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO) {
+
         Load load = loadRepository.findById(updateLoadDTO.getLoadId()).orElse(null);
         if (load == null) {
             return APIResponse.errorBadRequest("please enter valid load Id");
         }
 
-//        if (updateLoadDTO.getOriginCode() > 0 || updateLoadDTO.getDestinationCode() > 0) {
-//            String originCodeStr = Long.toString(updateLoadDTO.getOriginCode());
-//            String destinationCodeStr = Long.toString(updateLoadDTO.getDestinationCode());
-//            if (originCodeStr.length() < 5 && destinationCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("Both originCode and destinationCode at least  5 digits");
-//            }
-//            if (originCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("originCode has less than 5 digits");
-//            }
-//            if (destinationCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("destinationCode has less than 5 digits");
-//            }
-//        }
-
-        Carrier carrier = carrierRepository.findById(updateLoadDTO.getCarrierId()).orElse(null);
-        if(  carrier!=null && carrier.getId()!= ObjectUtil.getCarrierId()){
+        Carrier carrier = carrierRepository.findByCode(updateLoadDTO.getCarrierCode());
+        if(  carrier!=null && carrier.getCode()!= ObjectUtil.getCarrier().getCode()){
             return  APIResponse.errorBadRequest("you are not allow to update this load record");
         }
 
-        if (carrier != null || updateLoadDTO.getCarrierId() != 0) {
+        if (carrier != null || updateLoadDTO.getCarrierCode() != null) {
             load.setCarrier(carrier);
         }
         if (updateLoadDTO.getOriginCode() != null) {
@@ -122,7 +109,7 @@ public class LoadService {
         if (load == null) {
             return APIResponse.errorBadRequest("load Id is not found enter load  Id");
         }
-        if (load.getCarrier().getId() != ObjectUtil.getCarrierId()) {
+        if (load.getCarrier().getCode() != ObjectUtil.getCarrier().getCode()) {
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         loadRepository.delete(load);

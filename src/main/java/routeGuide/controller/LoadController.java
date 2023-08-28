@@ -20,39 +20,40 @@ import routeGuide.service.LoadService;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/load")
 public class LoadController {
 
 
     @Autowired
     LoadService loadService;
 
-    @PostMapping("load/create")
+    @PostMapping("/create")
     public ResponseEntity<APIResponse> addLoad( @RequestBody @Valid LoadDTO loadDTO){
 
         return loadService.addLoad(loadDTO);
     }
 
-    @PostMapping("load/update")
+    @PostMapping("/update")
     public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO){
         return loadService.updateLoad(updateLoadDTO);
     }
 
-   @DeleteMapping("load/{loadId}")
+   @DeleteMapping("/{loadId}")
    public ResponseEntity<APIResponse> deleteLoadById(@PathVariable int loadId){
        return loadService.deleteLoadById(loadId);
    }
 
-   @GetMapping("loads")
+   @GetMapping("")
    public ResponseEntity<APIResponse> getLoads(){
        return loadService.getLoads();
    }
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("loads/list")
+    @GetMapping("/list")
     public ResponseEntity<APIResponse> getAllLoads(){
         return loadService.getAllLoads();
     }
 
-    @PostMapping("load/import")
+    @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadLoads(@RequestParam("file") MultipartFile file) {
         try {
             String fileType = getFileExtension(file.getOriginalFilename());
@@ -76,7 +77,7 @@ public class LoadController {
         return "";
     }
 
-    @GetMapping("load/export")
+    @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {
 

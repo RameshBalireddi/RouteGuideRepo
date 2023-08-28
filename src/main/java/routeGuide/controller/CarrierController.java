@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.rmi.server.ExportException;
 
 @RestController
+@RequestMapping("/carrier")
 public class CarrierController {
 
 
@@ -26,34 +27,34 @@ public class CarrierController {
     private CarrierService carrierService;
 
 
-    @PostMapping("/carrier/signup")
+    @PostMapping("/signup")
        public ResponseEntity<APIResponse> addCarrier(@RequestBody @Valid CarrierDTO carrierDTO){
        return  carrierService.addCarrier(carrierDTO);
     }
 
-    @GetMapping("/carrier/login")
+    @GetMapping("/login")
     public ResponseEntity<APIResponse> carrierLogin(@RequestBody LoginDTO loginDTO) {
         return carrierService.loginCarrier(loginDTO);
     }
-    @PutMapping("carrier/update")
+    @PutMapping("/update")
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
     }
 
-    @DeleteMapping("carrier")
+    @DeleteMapping("/{code}")
     public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable String code){
 
         return  carrierService.deleteCarrier(code);
     }
 
-    @GetMapping("carrier")
+    @GetMapping("")
     public  ResponseEntity<APIResponse> getCarriers(){
 
         return  carrierService.getCarrier();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("carriers/list")
+    @GetMapping("/list")
     public  ResponseEntity<APIResponse> getAllCarriers() {
         try {
             return carrierService.getAllCarriers();
@@ -65,7 +66,7 @@ public class CarrierController {
     }
 
 
-    @PostMapping("/carrier/import")
+    @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadCarriers(@RequestParam("file") MultipartFile file) {
         try {
             String fileType = getFileExtension(file.getOriginalFilename());
@@ -91,7 +92,7 @@ public class CarrierController {
         return "";
     }
 
-    @GetMapping("carrier/export")
+    @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {
             response.setContentType("application/octet-stream");

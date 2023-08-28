@@ -22,7 +22,7 @@ public class UpdateLoadDTO {
 
     private double ratePerMile;
 
-    private int carrierId;
+    private String carrierCode;
 
     private LoadStatus status;
 

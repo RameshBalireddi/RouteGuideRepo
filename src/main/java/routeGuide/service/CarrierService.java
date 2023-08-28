@@ -90,10 +90,20 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO) {
 
+          Carrier carrierCheck=carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
+          if(carrierCheck==null )  {
+              return  APIResponse.errorBadRequest("invalid user enter valid user code");
+          }
+
           Carrier user = carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
 
-        if (ObjectUtil.getCarrierId() != updateCarrierDTO.getCarrierId() || (!user.getRole().equals("ADMIN"))) {
+
+        if (ObjectUtil.getCarrier().getCode() != updateCarrierDTO.getCarrierCode() || (!user.getRole().equals("ADMIN"))) {
             return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
+        }
+        Carrier carrierCode=   carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
+        if(carrierCode!=null){
+            return  APIResponse.errorBadRequest("given code is already registered give unique code");
         }
 
         Carrier carrier = new Carrier(updateCarrierDTO);
@@ -128,7 +138,7 @@ public class CarrierService {
     public ResponseEntity<APIResponse> saveCarriers(InputStream inputStream, String fileType) throws IOException {
         boolean firstLine = true;
 
-//        if (fileType.endsWith("xlsx")) {
+
             XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -169,7 +179,7 @@ public class CarrierService {
 
                 carrierRepository.save(carrier);
             }
-//        }
+
         return APIResponse.success("File uploaded successfully", fileType);
     }
 

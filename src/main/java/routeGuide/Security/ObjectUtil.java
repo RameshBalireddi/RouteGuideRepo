@@ -8,12 +8,13 @@ import routeGuide.entities.Carrier;
 public class ObjectUtil {
 
 
-    public static Carrier getCarrier() {
+    public static ApplicationUser getCarrier() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof ApplicationUser) {
-            Carrier authenticationCarrier = (Carrier) authentication.getPrincipal();
-
-            return authenticationCarrier;
+            ApplicationUser carrier = (ApplicationUser) authentication.getPrincipal();
+            if (carrier!= null) {
+                return carrier;
+            }
         }
         return null;
     }
