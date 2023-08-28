@@ -14,7 +14,8 @@ import java.util.Optional;
 public interface CarrierRepository extends JpaRepository<Carrier, Integer> {
 
 
-    Carrier findByCode(String carrierCode);
+    @Query(value = "SELECT * FROM carriers WHERE code = :carrierCode", nativeQuery = true)
+    Carrier findByCode(@Param("carrierCode") String carrierCode);
 
     Carrier findByUserName(String userName);
 

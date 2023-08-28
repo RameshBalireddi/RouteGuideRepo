@@ -90,7 +90,7 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO) {
 
-          Carrier carrierCheck=carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
+          Carrier carrierCheck=carrierRepository.findByCode(updateCarrierDTO.getCode());
           if(carrierCheck==null )  {
               return  APIResponse.errorBadRequest("invalid user enter valid user code");
           }

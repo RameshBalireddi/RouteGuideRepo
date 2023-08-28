@@ -32,7 +32,7 @@ public class CarrierController {
        return  carrierService.addCarrier(carrierDTO);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<APIResponse> carrierLogin(@RequestBody  @Valid  LoginDTO loginDTO) {
         return carrierService.loginCarrier(loginDTO);
     }

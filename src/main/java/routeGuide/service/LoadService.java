@@ -50,26 +50,13 @@ public class LoadService {
             return APIResponse.errorBadRequest("please enter valid carried Id");
         }
 
-//        if (loadDTO.getOriginCode()  || loadDTO.getDestinationCode() > 0) {
-//            String originCodeStr = Long.toString(loadDTO.getOriginCode());
-//            String destinationCodeStr = Long.toString(loadDTO.getDestinationCode());
-//            if (originCodeStr.length() < 5 && destinationCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("Both originCode and destinationCode at least  5 digits");
-//            }
-//            if (originCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("originCode has less than 5 digits");
-//            }
-//            if (destinationCodeStr.length() < 5) {
-//                return APIResponse.errorBadRequest("destinationCode has less than 5 digits");
-//            }
-//        }
+
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
         return APIResponse.successCreate("load added successfully ", load);
      }
 
     public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO) {
-
         Load load = loadRepository.findById(updateLoadDTO.getLoadId()).orElse(null);
         if (load == null) {
             return APIResponse.errorBadRequest("please enter valid load Id");
