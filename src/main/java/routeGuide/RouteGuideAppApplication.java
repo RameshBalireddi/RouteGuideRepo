@@ -9,7 +9,7 @@ import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@CrossOrigin(origins = "*")
+
 @SpringBootApplication
 //@ComponentScan("routeGuide")
 public class RouteGuideAppApplication {

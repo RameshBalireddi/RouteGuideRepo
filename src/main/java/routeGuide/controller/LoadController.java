@@ -18,7 +18,7 @@ import routeGuide.DTO.UpdateLoadDTO;
 import routeGuide.service.LoadService;
 
 import java.io.IOException;
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/load")
 public class LoadController {
@@ -26,23 +26,23 @@ public class LoadController {
 
     @Autowired
     LoadService loadService;
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/create")
     public ResponseEntity<APIResponse> addLoad( @RequestBody @Valid LoadDTO loadDTO){
 
         return loadService.addLoad(loadDTO);
     }
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/update")
     public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO){
         return loadService.updateLoad(updateLoadDTO);
     }
-    @CrossOrigin(origins = "*")
+
    @DeleteMapping("/{loadId}")
    public ResponseEntity<APIResponse> deleteLoadById(@PathVariable int loadId){
        return loadService.deleteLoadById(loadId);
    }
-    @CrossOrigin(origins = "*")
+
    @GetMapping("")
    public ResponseEntity<APIResponse> getLoads(){
        return loadService.getLoads();
@@ -52,7 +52,7 @@ public class LoadController {
     public ResponseEntity<APIResponse> getAllLoads(){
         return loadService.getAllLoads();
     }
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadLoads(@RequestParam("file") MultipartFile file) {
         try {
@@ -76,7 +76,7 @@ public class LoadController {
         }
         return "";
     }
-    @CrossOrigin(origins = "*")
+
     @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {

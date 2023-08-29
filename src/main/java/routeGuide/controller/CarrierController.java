@@ -44,26 +44,26 @@ public class CarrierController {
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
     }
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/token")
     public ResponseEntity<APIResponse> carrierAccessToken() {
         return carrierService.getAccessToken();
     }
 
-    @CrossOrigin(origins = "*")
+
     @DeleteMapping("/{code}")
     public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable String code){
 
         return  carrierService.deleteCarrier(code);
     }
 
-    @CrossOrigin(origins = "*")
+
     @GetMapping("")
     public ResponseEntity<APIResponse> getCarriers() {
             return carrierService.getCarrier();
     }
 
-    @CrossOrigin(origins = "*")
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/list")
     public  ResponseEntity<APIResponse> getAllCarriers() {
