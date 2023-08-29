@@ -1,6 +1,7 @@
 package routeGuide.Security;
 
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,12 +14,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Data
 public  class ApplicationUser implements UserDetails {
     private int userId;
 
-    @Getter
+
+
     private  String code;
+    @Getter
     private String userName;
     private String password;
       private List<GrantedAuthority> authorities;
@@ -29,7 +32,7 @@ public  class ApplicationUser implements UserDetails {
 
     public ApplicationUser(Carrier user) {
         this.userId = user.getId();
-        this.userName = user.getUserName();
+        this.userName = user.getContactEmail();
         this.password = user.getPassword();
         this.code=user.getCode();
 
@@ -78,6 +81,10 @@ public  class ApplicationUser implements UserDetails {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
 

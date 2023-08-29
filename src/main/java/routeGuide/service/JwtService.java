@@ -18,6 +18,38 @@ public class JwtService {
     private static final String SECRET = "6B59703373367638792F423F4528482B4D6251655468576D5A7134743777217A\n";
 
 
+
+       public Map<String, String> generateTokens(String email) {
+        Map<String, Object> claims = new HashMap<>();
+        String accessToken = createToken(claims, email, 1000 * 60 * 30); // 30 minutes
+        String refreshToken = createToken(claims, email, 1000 * 60 * 60 * 24 * 7); // 1 week
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+        return tokens;
+
+    }
+
+    private String createToken(Map<String, Object> claims, String email, long expirationMillis) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -38,39 +70,7 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-       public Map<String, String> generateTokens(String userName) {
-        Map<String, Object> claims = new HashMap<>();
-        String accessToken = createToken(claims, userName, 1000 * 60 * 30); // 30 minutes
-        String refreshToken = createToken(claims, userName, 1000 * 60 * 60 * 24 * 7); // 1 week
-
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("accessToken", accessToken);
-        tokens.put("refreshToken", refreshToken);
-
-        return tokens;
-    }
-
-    private String createToken(Map<String, Object> claims, String userName, long expirationMillis) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(userName)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
-    }
-
-
+       }
     private Key getSignKey() {
         byte[] KeyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(KeyBytes);

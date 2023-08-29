@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.LoginDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
 import routeGuide.service.CarrierService;
+import routeGuide.service.JwtService;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
@@ -25,6 +27,8 @@ public class CarrierController {
 
     @Autowired
     private CarrierService carrierService;
+    @Autowired
+    JwtService jwtService;
 
 
     @PostMapping("/signup")
@@ -48,10 +52,10 @@ public class CarrierController {
     }
 
     @GetMapping("")
-    public  ResponseEntity<APIResponse> getCarriers(){
-
-        return  carrierService.getCarrier();
+    public ResponseEntity<APIResponse> getCarriers() {
+            return carrierService.getCarrier();
     }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/list")
