@@ -48,10 +48,13 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public JwtAuthFilter jwtAuthFilter() {
-        return new JwtAuthFilter();
-    }
+    @Autowired
+    JwtAuthFilter jwtAuthFilter;
+
+//    @Bean
+//    public JwtAuthFilter jwtAuthFilter() {
+//        return new JwtAuthFilter();
+//    }
        @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
