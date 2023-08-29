@@ -2,7 +2,6 @@ package routeGuide.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,7 @@ import java.rmi.server.ExportException;
 
 @RestController
 @RequestMapping("/carrier")
+@CrossOrigin(origins = "*")
 public class CarrierController {
 
 
@@ -43,6 +43,11 @@ public class CarrierController {
     @PutMapping("/update")
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<APIResponse> carrierAccessToken() {
+        return carrierService.getAccessToken();
     }
 
     @DeleteMapping("/{code}")

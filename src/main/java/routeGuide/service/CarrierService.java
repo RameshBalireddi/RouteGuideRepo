@@ -243,8 +243,23 @@ public class CarrierService {
     }
 
 
+       public ResponseEntity<APIResponse> getAccessToken() {
+try {
 
+
+    Map<String, String> tokens = jwtService.generateTokens(ObjectUtil.getCarrier().getEmail());
+
+    Map<String, Object> responseData = new HashMap<>();
+    responseData.put("accessToken", tokens.get("accessToken"));
+    responseData.put("refreshToken", tokens.get("refreshToken"));
+
+    return APIResponse.success("Login successful", responseData);
+   }catch (RuntimeException e){
+    return  APIResponse.errorBadRequest("token not found ");
 }
+    }
+
+  }
 
 
 

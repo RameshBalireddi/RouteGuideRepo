@@ -21,6 +21,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/load")
+@CrossOrigin(origins = "*")
 public class LoadController {
 
 
