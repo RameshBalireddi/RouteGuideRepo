@@ -18,10 +18,9 @@ import routeGuide.service.JwtService;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/carrier")
-@CrossOrigin(origins = "*")
 public class CarrierController {
 
 

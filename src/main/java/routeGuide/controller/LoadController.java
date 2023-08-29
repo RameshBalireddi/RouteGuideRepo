@@ -18,10 +18,9 @@ import routeGuide.DTO.UpdateLoadDTO;
 import routeGuide.service.LoadService;
 
 import java.io.IOException;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/load")
-@CrossOrigin(origins = "*")
 public class LoadController {
 
 
