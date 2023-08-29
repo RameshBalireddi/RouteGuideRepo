@@ -30,38 +30,41 @@ public class CarrierController {
     @Autowired
     JwtService jwtService;
 
-
+    @CrossOrigin(origins = "*")
     @PostMapping("/signup")
        public ResponseEntity<APIResponse> addCarrier(@RequestBody @Valid CarrierDTO carrierDTO){
        return  carrierService.addCarrier(carrierDTO);
     }
-
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public ResponseEntity<APIResponse> carrierLogin(@RequestBody  @Valid  LoginDTO loginDTO) {
         return carrierService.loginCarrier(loginDTO);
     }
+    @CrossOrigin(origins = "*")
     @PutMapping("/update")
     public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
         return  carrierService.updateCarrierInfo(updateCarrierDTO);
     }
-
+    @CrossOrigin(origins = "*")
     @PostMapping("/token")
     public ResponseEntity<APIResponse> carrierAccessToken() {
         return carrierService.getAccessToken();
     }
 
+    @CrossOrigin(origins = "*")
     @DeleteMapping("/{code}")
     public  ResponseEntity<APIResponse> deleteCarrier(@PathVariable String code){
 
         return  carrierService.deleteCarrier(code);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("")
     public ResponseEntity<APIResponse> getCarriers() {
             return carrierService.getCarrier();
     }
 
-
+    @CrossOrigin(origins = "*")
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/list")
     public  ResponseEntity<APIResponse> getAllCarriers() {

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 //@ComponentScan("routeGuide")
-@CrossOrigin(origins = "http://localhost:4200/*")
+@CrossOrigin(origins = "*")
 
 public class RouteGuideAppApplication {
 
