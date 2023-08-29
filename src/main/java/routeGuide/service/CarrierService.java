@@ -79,7 +79,7 @@ public class CarrierService {
         Carrier carrier = carrierRepository.findByCode(code);
 
         if (carrier == null) {
-            return APIResponse.errorBadRequest("carrier Id is not found enter valid carrier Id");
+            return APIResponse.errorBadRequest("carrier code is not found enter valid carrier code");
         }
         if (carrier.getId() != ObjectUtil.getCarrierId()) {
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
