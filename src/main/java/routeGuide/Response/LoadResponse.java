@@ -20,7 +20,7 @@ public class LoadResponse {
 
     private double ratePerMile;
 
-    private int carrierId;
+    private String carrierCode;
 
     private LoadStatus status;
 
@@ -31,7 +31,7 @@ public class LoadResponse {
         this.destinationCode = load.getDestinationCode();
         this.mileage = load.getMileage();
         this.ratePerMile = load.getRatePerMile();
-        this.carrierId = load.getCarrier().getId();
+        this.carrierCode = load.getCarrier().getCode();
         this.status = load.getStatus();
     }
 
