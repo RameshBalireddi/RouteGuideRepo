@@ -110,7 +110,7 @@ public class CarrierController {
         }
         return "";
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {

@@ -52,7 +52,7 @@ public class LoadController {
     public ResponseEntity<APIResponse> getAllLoads(){
         return loadService.getAllLoads();
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadLoads(@RequestParam("file") MultipartFile file) {
         try {
@@ -76,7 +76,7 @@ public class LoadController {
         }
         return "";
     }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {
