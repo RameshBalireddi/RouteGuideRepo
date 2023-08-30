@@ -45,9 +45,9 @@ public class LoadService {
 
 
     public ResponseEntity<APIResponse> addLoad(LoadDTO loadDTO) {
-        Carrier carrier = carrierRepository.findById(loadDTO.getCarrierId()).orElse(null);
+        Carrier carrier = carrierRepository.findByCode(loadDTO.getCarrierCode());
         if (carrier == null) {
-            return APIResponse.errorBadRequest("please enter valid carried Id");
+            return APIResponse.errorBadRequest("please enter valid carried code");
         }
 
 
@@ -169,8 +169,6 @@ public class LoadService {
                 load.setRatePerMile(ratePerMile);
                 load.setCarrier(carrier);
                 load.setStatus(loadStatus);
-
-
                 loadRepository.save(load);
             }
         }
@@ -178,13 +176,11 @@ public class LoadService {
     }
 
 
-
-
     public void exportLoads(HttpServletResponse response) throws IOException {
         List<Load> loads = loadRepository.findAll();
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Loads");
+        XSSFSheet sheet = workbook.createSheet("loads");
 
         // Create a header row
         Row headerRow = sheet.createRow(0);

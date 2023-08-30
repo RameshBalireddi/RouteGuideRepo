@@ -238,14 +238,11 @@ public class CarrierService {
             responseData.put("accessToken", tokens.get("accessToken"));
             responseData.put("refreshToken", tokens.get("refreshToken"));
 
-//          String name=  ObjectUtil.getCarrier().getCarrierName();
-//          System.out.print(name);
-
 
             return APIResponse.successToken("Login successful", responseData,carrier.getUserName());
         }
 
-        return APIResponse.errorBadRequest("User unauthorized");
+        return APIResponse.errorBadRequest("User password is wrong");
     }
 
 
@@ -262,7 +259,7 @@ try {
     return APIResponse.success("Login successful", responseData);
    }catch (RuntimeException e){
     return  APIResponse.errorBadRequest("token not found ");
-}
+ }
     }
 
   }

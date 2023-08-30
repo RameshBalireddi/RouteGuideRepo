@@ -14,11 +14,11 @@ import routeGuide.Enum.LoadStatus;
 public class LoadDTO {
 
     @NotNull(message = " carrierId must not be null ")
-    private int carrierId;
-
+    private String carrierCode;
+    @NotNull
     @Pattern(regexp = "\\d{5,}", message = "Origin code must have at least 5 digits")
     private String originCode;
-
+    @NotNull
     @Pattern(regexp = "\\d{5,}", message = "Origin destination code must have at least 5 digits")
     private String  destinationCode;
 

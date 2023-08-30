@@ -21,8 +21,7 @@ public  class ApplicationUser implements UserDetails {
     @Getter
     private  String code;
 
-    @Getter
-    @Setter
+
     private String  carrierName;
     @Getter
     private String email;

@@ -22,7 +22,6 @@ public class ValidationExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
 
-
         ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -45,7 +44,7 @@ public class ValidationExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationException(ExpiredJwtException ex) {
+    public ResponseEntity<ValidationErrorResponse> handleJwtException(ExpiredJwtException ex) {
         List<String> errors = Collections.singletonList("jwt token expired please login again "+ ex.getLocalizedMessage());
 
         ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));

@@ -33,7 +33,7 @@ public class Load {
     public Load(LoadDTO loadDTO, Carrier carrier) {
 
         this.originCode=loadDTO.getOriginCode();
-        this.destinationCode=getDestinationCode();
+        this.destinationCode= loadDTO.getDestinationCode();
         this.mileage=loadDTO.getMileage();
         this.ratePerMile=loadDTO.getRatePerMile();
         this.carrier=carrier;
