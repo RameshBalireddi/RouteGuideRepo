@@ -14,6 +14,8 @@ public class APIResponse {
     private boolean success;
     private String message;
     private Object data;
+    private Object username;
+
 
 
 
@@ -23,6 +25,14 @@ public class APIResponse {
         apiResponse.setSuccess(true);
         apiResponse.setMessage(message);
         apiResponse.setData(data);
+        return ResponseEntity.ok(apiResponse);
+    }
+    public static ResponseEntity<APIResponse> successToken(String message, Object data,Object userName){
+        APIResponse apiResponse=new APIResponse();
+        apiResponse.setSuccess(true);
+        apiResponse.setMessage(message);
+        apiResponse.setData(data);
+        apiResponse.setUsername(userName);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -41,7 +51,7 @@ public class APIResponse {
         apiResponse.setMessage(message);
         apiResponse.setData(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
-    }
+     }
 
     public static ResponseEntity<APIResponse> errorUnauthorised(String message){
         APIResponse apiResponse=new APIResponse();

@@ -3,28 +3,31 @@ package routeGuide.Security;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import routeGuide.Enum.UserRole;
 import routeGuide.entities.Carrier;
-
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-@Data
+
+
 public  class ApplicationUser implements UserDetails {
     private int userId;
 
 
 
-    private  String code;
     @Getter
-    private String userName;
+    private  String code;
+
+    @Getter
+    @Setter
+    private String  carrierName;
+    @Getter
+    private String email;
     private String password;
-      private List<GrantedAuthority> authorities;
+    private List<GrantedAuthority> authorities;
 
     public void setCode(String code) {
         this.code = code;
@@ -32,7 +35,8 @@ public  class ApplicationUser implements UserDetails {
 
     public ApplicationUser(Carrier user) {
         this.userId = user.getId();
-        this.userName = user.getContactEmail();
+        this.carrierName=getUsername();
+        this.email = user.getContactEmail();
         this.password = user.getPassword();
         this.code=user.getCode();
 
@@ -50,12 +54,10 @@ public  class ApplicationUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return email;
     }
 
-    public String getEmail() {
-        return userName;
-    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -83,8 +85,24 @@ public  class ApplicationUser implements UserDetails {
         this.userId = userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getCarrierName() {
+        return carrierName;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setCarrierName(String carrierName) {
+        this.carrierName = carrierName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

@@ -1,5 +1,6 @@
 package routeGuide.controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,14 @@ public class CarrierController {
         return  carrierService.deleteCarrier(code);
     }
 
-
     @GetMapping("")
     public ResponseEntity<APIResponse> getCarriers() {
+        try {
+
             return carrierService.getCarrier();
+        }catch (ExpiredJwtException e){
+            return  APIResponse.errorBadRequest("token expired pls login again");
+        }
     }
 
 
@@ -98,7 +103,10 @@ public class CarrierController {
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex > 0) {
-            return fileName.substring(lastDotIndex + 1);
+            String filename=fileName.substring(lastDotIndex );
+            System.out.print(filename);
+
+            return fileName.substring(lastDotIndex+1 );
         }
         return "";
     }

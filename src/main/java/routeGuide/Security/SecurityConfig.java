@@ -55,10 +55,7 @@ public class SecurityConfig {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
-//    @Bean
-//    public JwtAuthFilter jwtAuthFilter() {
-//        return new JwtAuthFilter();
-//    }
+
        @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -93,8 +90,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
             .httpBasic(Customizer.withDefaults())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-
-
     return http.build();
 }
 
@@ -111,6 +106,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+
     }
 
 

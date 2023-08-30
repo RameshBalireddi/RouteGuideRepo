@@ -19,10 +19,12 @@ import routeGuide.Response.CarrierResponse;
 import routeGuide.Security.ObjectUtil;
 import routeGuide.entities.Carrier;
 import routeGuide.repository.CarrierRepository;
+import routeGuide.Security.ApplicationUser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -236,7 +238,11 @@ public class CarrierService {
             responseData.put("accessToken", tokens.get("accessToken"));
             responseData.put("refreshToken", tokens.get("refreshToken"));
 
-            return APIResponse.success("Login successful", responseData);
+//          String name=  ObjectUtil.getCarrier().getCarrierName();
+//          System.out.print(name);
+
+
+            return APIResponse.successToken("Login successful", responseData,carrier.getUserName());
         }
 
         return APIResponse.errorBadRequest("User unauthorized");

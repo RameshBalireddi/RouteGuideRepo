@@ -181,7 +181,7 @@ public class LoadService {
 
 
     public void exportLoads(HttpServletResponse response) throws IOException {
-        List<Load> loads = loadRepository.findAll(); // Retrieve the data from the database
+        List<Load> loads = loadRepository.findAll();
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Loads");
@@ -196,7 +196,7 @@ public class LoadService {
         headerRow.createCell(5).setCellValue("Carrier");
         headerRow.createCell(6).setCellValue("Status");
 
-        // Populate the rows with data
+
         int rowNum = 1;
         for (Load load : loads) {
             Row row = sheet.createRow(rowNum++);
@@ -205,7 +205,7 @@ public class LoadService {
             row.createCell(2).setCellValue(load.getDestinationCode());
             row.createCell(3).setCellValue(load.getMileage());
             row.createCell(4).setCellValue(load.getRatePerMile());
-            row.createCell(5).setCellValue(load.getCarrier().getId()); // Replace with appropriate carrier field
+            row.createCell(5).setCellValue(load.getCarrier().getId());
             row.createCell(6).setCellValue(load.getStatus().toString());
         }
 

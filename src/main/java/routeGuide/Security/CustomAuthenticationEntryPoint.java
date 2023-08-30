@@ -21,7 +21,7 @@ public class CustomAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
         response.setContentType("application/json");
         Map<String, String> errorMap = new HashMap<>();
         if (request.getUserPrincipal() != null) {
-            errorMap.put("errorMessage", "Access Denied for you");
+            errorMap.put("errorMessage", "Access Denied to you");
         } else {
             errorMap.put("errorMessage", "please check your userName and password");
         }
