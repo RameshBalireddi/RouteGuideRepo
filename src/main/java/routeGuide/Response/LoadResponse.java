@@ -1,9 +1,14 @@
 package routeGuide.Response;
 
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import routeGuide.Enum.LoadStatus;
 import routeGuide.entities.Load;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class LoadResponse {
 
     private int loadId;
@@ -18,6 +23,7 @@ public class LoadResponse {
     private int carrierId;
 
     private LoadStatus status;
+
 
     public LoadResponse(Load load) {
         this.loadId = load.getId();
