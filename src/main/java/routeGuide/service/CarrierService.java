@@ -237,9 +237,10 @@ public class CarrierService {
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("accessToken", tokens.get("accessToken"));
             responseData.put("refreshToken", tokens.get("refreshToken"));
+            responseData.put("userName",carrier.getUserName());
 
 
-            return APIResponse.successToken("Login successful", responseData,carrier.getUserName());
+            return APIResponse.successToken("Login successful", responseData);
         }
 
         return APIResponse.errorBadRequest("User password is wrong");

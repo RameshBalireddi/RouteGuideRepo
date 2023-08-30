@@ -14,7 +14,7 @@ public class APIResponse {
     private boolean success;
     private String message;
     private Object data;
-    private Object username;
+//    private Object username;
 
 
 
@@ -27,12 +27,12 @@ public class APIResponse {
         apiResponse.setData(data);
         return ResponseEntity.ok(apiResponse);
     }
-    public static ResponseEntity<APIResponse> successToken(String message, Object data,Object userName){
+    public static ResponseEntity<APIResponse> successToken(String message, Object data){
         APIResponse apiResponse=new APIResponse();
         apiResponse.setSuccess(true);
         apiResponse.setMessage(message);
         apiResponse.setData(data);
-        apiResponse.setUsername(userName);
+//        apiResponse.setUsername(userName);
         return ResponseEntity.ok(apiResponse);
     }
 
