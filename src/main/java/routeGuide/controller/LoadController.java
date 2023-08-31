@@ -32,10 +32,16 @@ public class LoadController {
 
         return loadService.addLoad(loadDTO);
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/create/admin/{carrierCode}")
+    public ResponseEntity<APIResponse> addLoadFromAdmin( @RequestBody @Valid LoadDTO loadDTO, @PathVariable String carrierCode ){
 
-    @PostMapping("/update")
-    public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO){
-        return loadService.updateLoad(updateLoadDTO);
+        return loadService.addLoadFromAdmin(loadDTO,carrierCode);
+    }
+
+    @PutMapping("/update/{loadId}")
+    public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO,int loadId){
+        return loadService.updateLoad(updateLoadDTO,loadId);
     }
 
    @DeleteMapping("/{loadId}")
@@ -80,7 +86,6 @@ public class LoadController {
     @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {
-
 
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=loads.xlsx");

@@ -56,8 +56,23 @@ public class LoadService {
         return APIResponse.successCreate("load added successfully ", load);
      }
 
-    public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO) {
-        Load load = loadRepository.findById(updateLoadDTO.getLoadId()).orElse(null);
+    public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO,String carrierCode) {
+        Carrier carrier = carrierRepository.findByCode(carrierCode);
+
+        if (carrier == null) {
+            return APIResponse.errorBadRequest("please enter valid carried code");
+        }
+        if(!carrier.getRole().equals(UserRole.ADMIN)){
+            return APIResponse.errorUnauthorised("you are not allowed to create Carrier");
+        }
+
+        Load load = new Load(loadDTO, carrier);
+        loadRepository.save(load);
+        return APIResponse.successCreate("load added successfully ", load);
+    }
+
+    public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO,int loadId) {
+        Load load = loadRepository.findById(loadId).orElse(null);
         if (load == null) {
             return APIResponse.errorBadRequest("please enter valid load Id");
         }
@@ -174,14 +189,11 @@ public class LoadService {
         }
         return APIResponse.success("File uploaded successfully", fileType);
     }
-
-
     public void exportLoads(HttpServletResponse response) throws IOException {
         List<Load> loads = loadRepository.findAll();
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("loads");
-
         // Create a header row
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("Load ID");
@@ -191,8 +203,6 @@ public class LoadService {
         headerRow.createCell(4).setCellValue("Rate Per Mile");
         headerRow.createCell(5).setCellValue("Carrier");
         headerRow.createCell(6).setCellValue("Status");
-
-
         int rowNum = 1;
         for (Load load : loads) {
             Row row = sheet.createRow(rowNum++);
@@ -211,7 +221,5 @@ public class LoadService {
         ops.close();
 
     }
-
-
 
 }

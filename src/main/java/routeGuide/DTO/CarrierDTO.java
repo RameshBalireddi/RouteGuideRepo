@@ -17,7 +17,6 @@ public class CarrierDTO {
     @NotNull
     private String carrierCode;
 
-
     @Email(message = "invalid email format")
     private String contactEmail;
 

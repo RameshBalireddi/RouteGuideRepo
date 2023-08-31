@@ -80,6 +80,49 @@ public class CarrierService {
     }
 
 
+    public ResponseEntity<APIResponse> addCarrierFromAdmin(CarrierDTO carrierDTO) {
+
+        Carrier carrierCode = carrierRepository.findByCode(carrierDTO.getCarrierCode());
+        if (carrierCode != null) {
+            return APIResponse.errorBadRequest("carrier code already registered enter new code");
+        }
+
+
+        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
+        if (carrierName != null) {
+            return APIResponse.errorBadRequest("given name is already registered enter new name");
+        }
+
+
+        Carrier carrierEmail = carrierRepository.findByContactEmail(carrierDTO.getContactEmail());
+        if (carrierEmail != null) {
+            return APIResponse.errorBadRequest("given email is already registered enter new email");
+        }
+
+
+
+        Carrier carrier = new Carrier();
+        carrier.setUserName(carrierDTO.getCarrierName());
+        carrier.setCode(carrierDTO.getCarrierCode());
+        carrier.setContactEmail(carrierDTO.getContactEmail());
+
+        String encodedPassword = bCryptPasswordEncoder.encode(carrierDTO.getPassword());
+        carrier.setPassword(encodedPassword);
+
+        carrier.setRole(carrierDTO.getRole());
+
+        carrierRepository.save(carrier);
+
+        if(carrierDTO.getRole().equals(UserRole.ADMIN)){
+            return  APIResponse.successCreate("Admin added successfully ", carrierDTO);
+        }
+
+        return APIResponse.successCreate("carrier added successfully ", carrierDTO);
+    }
+
+
+
+
     public ResponseEntity<APIResponse> deleteCarrier(String code) {
 
         Carrier carrier = carrierRepository.findByCode(code);
@@ -95,11 +138,11 @@ public class CarrierService {
         return APIResponse.success("carrier delete successfully ", carrier.getUserName());
     }
 
-    public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO) {
+    public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO,String carrierCode) {
 
-          Carrier carrierCheck=carrierRepository.findByCode(updateCarrierDTO.getCode());
+          Carrier carrierCheck=carrierRepository.findByCode(carrierCode);
           if(carrierCheck==null )  {
-              return  APIResponse.errorBadRequest("invalid user enter valid user code");
+              return  APIResponse.errorBadRequest("invalid Carrier enter valid carrier code");
           }
 
           Carrier user = carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
@@ -108,8 +151,9 @@ public class CarrierService {
         if (ObjectUtil.getCarrier().getCode() != updateCarrierDTO.getCarrierCode() && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
             return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
         }
-        Carrier carrierCode=   carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
-        if(carrierCode!=null){
+
+        Carrier updateCarrierCode=   carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
+        if(updateCarrierCode!=null){
             return  APIResponse.errorBadRequest("given code is already registered give unique code");
         }
 
@@ -193,7 +237,6 @@ public class CarrierService {
                 carrier.setContactEmail(carrierEmail);
                 carrier.setPassword(bCryptPasswordEncoder.encode(carrierPassword));
                 carrier.setRole(carrierRole);
-
                 carrierRepository.save(carrier);
             }
 

@@ -32,7 +32,6 @@ public class APIResponse {
         apiResponse.setSuccess(true);
         apiResponse.setMessage(message);
         apiResponse.setData(data);
-//        apiResponse.setUsername(userName);
         return ResponseEntity.ok(apiResponse);
     }
 

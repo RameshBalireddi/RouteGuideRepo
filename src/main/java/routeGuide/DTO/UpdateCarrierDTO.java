@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class UpdateCarrierDTO {
 
-    private String code;
+
 
     private String carrierName;
 

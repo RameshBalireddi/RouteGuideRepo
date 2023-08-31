@@ -38,8 +38,6 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
-
-
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
@@ -70,6 +68,7 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
        }
+
     private Key getSignKey() {
         byte[] KeyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(KeyBytes);

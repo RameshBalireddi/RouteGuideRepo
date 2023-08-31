@@ -30,21 +30,27 @@ public class CarrierController {
     @Autowired
     JwtService jwtService;
 
-    @CrossOrigin(origins = "*")
+
     @PostMapping("/signup")
        public ResponseEntity<APIResponse> addCarrier(@RequestBody @Valid CarrierDTO carrierDTO){
        return  carrierService.addCarrier(carrierDTO);
     }
-    @CrossOrigin(origins = "*")
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/create/admin")
+    public ResponseEntity<APIResponse> addCarrierFromAdmin(@RequestBody @Valid CarrierDTO carrierDTO){
+        return  carrierService.addCarrierFromAdmin(carrierDTO);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<APIResponse> carrierLogin(@RequestBody  @Valid  LoginDTO loginDTO) {
         return carrierService.loginCarrier(loginDTO);
     }
-    @CrossOrigin(origins = "*")
-    @PutMapping("/update")
-    public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO){
-        return  carrierService.updateCarrierInfo(updateCarrierDTO);
-    }
+
+    @PutMapping("/update/{carrierCode}")
+    public  ResponseEntity<APIResponse> updateCarrierInfo(@RequestBody @Valid UpdateCarrierDTO updateCarrierDTO,@PathVariable String carrierCode){
+        return  carrierService.updateCarrierInfo(updateCarrierDTO,carrierCode);
+     }
 
     @PostMapping("/token")
     public ResponseEntity<APIResponse> carrierAccessToken() {
@@ -67,7 +73,6 @@ public class CarrierController {
             return  APIResponse.errorBadRequest("token expired pls login again");
         }
     }
-
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/list")
@@ -92,7 +97,6 @@ public class CarrierController {
         return  null;
     }
 
-
     @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadCarriers(@RequestParam("file") MultipartFile file) {
         try {
@@ -109,7 +113,6 @@ public class CarrierController {
             return APIResponse.errorBadRequest("An error occurred during file upload: " + e.getMessage());
         }
     }
-
 
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf(".");
