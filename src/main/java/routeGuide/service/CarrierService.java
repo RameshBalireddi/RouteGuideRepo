@@ -65,6 +65,10 @@ public class CarrierService {
             carrier.setCode(carrierDTO.getCarrierCode());
             carrier.setContactEmail(carrierDTO.getContactEmail());
 
+        if (!isValidPassword(carrierDTO.getPassword())) {
+            return APIResponse.errorBadRequest("Password must contain at least one number, one capital letter, and one special character.");
+        }
+
             String encodedPassword = bCryptPasswordEncoder.encode(carrierDTO.getPassword());
             carrier.setPassword(encodedPassword);
 
@@ -77,6 +81,11 @@ public class CarrierService {
            }
 
         return APIResponse.successCreate("carrier added successfully ", carrierDTO);
+    }
+    private boolean isValidPassword(String password) {
+        // Regular expression to check for at least one number, one capital letter, and one special character
+        String passwordRegex = "^(?=.*\\d)(?=.*[A-Z])(?=.*[!@#$%^&*]).*$";
+        return password.matches(passwordRegex);
     }
 
 
