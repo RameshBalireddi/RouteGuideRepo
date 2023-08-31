@@ -45,6 +45,6 @@ public class Carrier {
         if(updateCarrierDTO.getContactEmail()==null) {
             this.contactEmail = updateCarrierDTO.getContactEmail();
         }
-
     }
+
 }

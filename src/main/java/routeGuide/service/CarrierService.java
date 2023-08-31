@@ -72,6 +72,10 @@ public class CarrierService {
 
            carrierRepository.save(carrier);
 
+           if(carrierDTO.getRole().equals(UserRole.ADMIN)){
+               return  APIResponse.successCreate("Admin added successfully ", carrierDTO);
+           }
+
         return APIResponse.successCreate("carrier added successfully ", carrierDTO);
     }
 
