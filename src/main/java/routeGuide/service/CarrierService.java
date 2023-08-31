@@ -144,10 +144,10 @@ public class CarrierService {
         List<Carrier> carrierList = carrierRepository.findByRole(UserRole.ADMIN);
 
         if (carrierList.isEmpty()) {
-            return APIResponse.errorBadRequest("currently don't have any carriers");
+            return APIResponse.errorBadRequest("currently don't have any admins");
         }
         List<CarrierResponse> carrierResponses = carrierList.stream().map(c -> new CarrierResponse(c)).collect(Collectors.toList());
-        return APIResponse.success("carriers : ", carrierResponses);
+        return APIResponse.success("Admins : ", carrierResponses);
     }
 
 
