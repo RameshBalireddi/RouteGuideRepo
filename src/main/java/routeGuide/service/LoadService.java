@@ -56,8 +56,8 @@ public class LoadService {
         return APIResponse.successCreate("load added successfully ", load);
      }
 
-    public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO,String carrierCode) {
-        Carrier carrier = carrierRepository.findByCode(carrierCode);
+    public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO) {
+        Carrier carrier = carrierRepository.findByCode(loadDTO.getCarrierCode());
 
         if (carrier == null) {
             return APIResponse.errorBadRequest("please enter valid carried code");
@@ -78,7 +78,7 @@ public class LoadService {
         }
 
         Carrier carrier = carrierRepository.findByCode(updateLoadDTO.getCarrierCode());
-        if(  carrier!=null && carrier.getCode()!= ObjectUtil.getCarrier().getCode()){
+        if(  carrier!=null && carrier.getCode()!= ObjectUtil.getCarrier().getCode()  && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))){
             return  APIResponse.errorBadRequest("you are not allow to update this load record");
         }
 

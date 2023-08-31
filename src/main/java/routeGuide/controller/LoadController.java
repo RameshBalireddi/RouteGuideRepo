@@ -33,14 +33,14 @@ public class LoadController {
         return loadService.addLoad(loadDTO);
     }
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/create/admin/{carrierCode}")
-    public ResponseEntity<APIResponse> addLoadFromAdmin( @RequestBody @Valid LoadDTO loadDTO, @PathVariable String carrierCode ){
+    @PostMapping("/create/admin")
+    public ResponseEntity<APIResponse> addLoadFromAdmin( @RequestBody @Valid LoadDTO loadDTO){
 
-        return loadService.addLoadFromAdmin(loadDTO,carrierCode);
+        return loadService.addLoadFromAdmin(loadDTO);
     }
 
     @PutMapping("/update/{loadId}")
-    public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO,int loadId){
+    public ResponseEntity<APIResponse> updateLoad(@Valid @RequestBody UpdateLoadDTO updateLoadDTO,@PathVariable int loadId){
         return loadService.updateLoad(updateLoadDTO,loadId);
     }
 
