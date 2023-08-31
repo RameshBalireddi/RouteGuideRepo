@@ -87,7 +87,8 @@ public class CarrierService {
         if (carrier == null) {
             return APIResponse.errorBadRequest("carrier code is not found enter valid carrier code");
         }
-        if (carrier.getId() != ObjectUtil.getCarrierId()) {
+        if (carrier.getId() != ObjectUtil.getCarrierId()  && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
+
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         carrierRepository.delete(carrier);
@@ -104,7 +105,7 @@ public class CarrierService {
           Carrier user = carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
 
 
-        if (ObjectUtil.getCarrier().getCode() != updateCarrierDTO.getCarrierCode() || (!user.getRole().equals("ADMIN"))) {
+        if (ObjectUtil.getCarrier().getCode() != updateCarrierDTO.getCarrierCode() && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
             return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
         }
         Carrier carrierCode=   carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
@@ -264,7 +265,6 @@ public class CarrierService {
 
        public ResponseEntity<APIResponse> getAccessToken() {
 try {
-
 
     Map<String, String> tokens = jwtService.generateTokens(ObjectUtil.getCarrier().getEmail());
 

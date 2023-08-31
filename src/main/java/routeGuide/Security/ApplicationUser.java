@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import routeGuide.Enum.UserRole;
 import routeGuide.entities.Carrier;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +27,8 @@ public  class ApplicationUser implements UserDetails {
     @Getter
     private String email;
     private String password;
+    @Getter
+    private UserRole role;
     private List<GrantedAuthority> authorities;
 
     public void setCode(String code) {
@@ -38,6 +41,7 @@ public  class ApplicationUser implements UserDetails {
         this.email = user.getContactEmail();
         this.password = user.getPassword();
         this.code=user.getCode();
+        this.role=user.getRole();
 
 
        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));

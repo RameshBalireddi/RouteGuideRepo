@@ -12,6 +12,7 @@ public class ObjectUtil {
 
             if (authentication != null && authentication.getPrincipal() instanceof ApplicationUser) {
                 ApplicationUser carrier = (ApplicationUser) authentication.getPrincipal();
+
                 return carrier;
             }
             return null;
