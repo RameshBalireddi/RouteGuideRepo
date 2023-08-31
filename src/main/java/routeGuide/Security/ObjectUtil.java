@@ -2,6 +2,7 @@ package routeGuide.Security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import routeGuide.entities.Carrier;
 
 public class ObjectUtil {
 

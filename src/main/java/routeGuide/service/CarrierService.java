@@ -238,6 +238,7 @@ public class CarrierService {
             responseData.put("accessToken", tokens.get("accessToken"));
             responseData.put("refreshToken", tokens.get("refreshToken"));
             responseData.put("userName",carrier.getUserName());
+            responseData.put("userRole",carrier.getRole());
 
 
             return APIResponse.successToken("Login successful", responseData);
