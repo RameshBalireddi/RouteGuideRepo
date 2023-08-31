@@ -80,6 +80,17 @@ public class CarrierController {
 
      return  null;
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/list/ADMIN")
+    public  ResponseEntity<APIResponse> getAllAdmins() {
+        try {
+            return carrierService.getAllAdmins();
+        } catch (AccessDeniedException e) {
+            e.getMessage();
+        }
+
+        return  null;
+    }
 
 
     @PostMapping("/import")

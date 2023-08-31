@@ -131,7 +131,17 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> getAllCarriers() {
 
-        List<Carrier> carrierList = carrierRepository.findAll();
+        List<Carrier> carrierList = carrierRepository.findByRole(UserRole.CARRIER);
+
+        if (carrierList.isEmpty()) {
+            return APIResponse.errorBadRequest("currently don't have any carriers");
+        }
+        List<CarrierResponse> carrierResponses = carrierList.stream().map(c -> new CarrierResponse(c)).collect(Collectors.toList());
+        return APIResponse.success("carriers : ", carrierResponses);
+    }
+    public ResponseEntity<APIResponse> getAllAdmins() {
+
+        List<Carrier> carrierList = carrierRepository.findByRole(UserRole.ADMIN);
 
         if (carrierList.isEmpty()) {
             return APIResponse.errorBadRequest("currently don't have any carriers");
