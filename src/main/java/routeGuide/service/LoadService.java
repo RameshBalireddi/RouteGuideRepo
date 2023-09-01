@@ -50,7 +50,6 @@ public class LoadService {
             return APIResponse.errorBadRequest("please enter valid carried code");
         }
 
-
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
         return APIResponse.successCreate("load added successfully ", load);
@@ -78,9 +77,15 @@ public class LoadService {
         }
 
         Carrier carrier = carrierRepository.findByCode(updateLoadDTO.getCarrierCode());
-        if(  carrier!=null && carrier.getCode()!= ObjectUtil.getCarrier().getCode()  && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))){
-            return  APIResponse.errorBadRequest("you are not allow to update this load record");
+        if(carrier==null){
+            return  APIResponse.errorBadRequest("please enter valid  carrier code ");
         }
+        if(!load.getCarrier().getCode().equals(ObjectUtil.getCarrier().getCode()) && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)) ){
+            System.out.println(!load.getCarrier().getCode().equals(ObjectUtil.getCarrier().getCode())  + "  "+ (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)));
+           System.out.println(load.getCarrier().getCode() + " "+ObjectUtil.getCarrier().getCode());
+            return APIResponse.errorUnauthorised(" you are not allow to update this record");
+        }
+
 
         if (carrier != null || updateLoadDTO.getCarrierCode() != null) {
             load.setCarrier(carrier);
