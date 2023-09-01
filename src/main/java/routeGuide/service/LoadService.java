@@ -116,7 +116,7 @@ public class LoadService {
         if (load == null) {
             return APIResponse.errorBadRequest("load Id is not found enter load  Id");
         }
-        if (load.getCarrier().getCode() != ObjectUtil.getCarrier().getCode()) {
+        if (!load.getCarrier().getCode().equals( ObjectUtil.getCarrier().getCode())  && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         loadRepository.delete(load);

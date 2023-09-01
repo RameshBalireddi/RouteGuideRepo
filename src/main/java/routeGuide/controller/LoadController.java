@@ -1,13 +1,9 @@
 package routeGuide.controller;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +71,7 @@ public class LoadController {
             return APIResponse.errorBadRequest("An error occurred during file upload: " + e.getMessage());
         }
     }
+
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex > 0) {
@@ -86,16 +83,11 @@ public class LoadController {
     @GetMapping("/export")
     public void exportLoads(HttpServletResponse response) throws Exception {
         try {
-
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", "attachment; filename=loads.xlsx");
-
             loadService.exportLoads(response);
         } catch (FileUploadException f) {
            f.getMessage();
         }
     }
-
-
-
 }

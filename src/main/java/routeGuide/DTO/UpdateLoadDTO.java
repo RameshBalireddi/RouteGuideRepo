@@ -14,7 +14,7 @@ public class UpdateLoadDTO {
 
 //   private int loadId;
     @NotNull
-    @Pattern(regexp = "\\d{5,}", message = "Origin destination code must have at least 5 digits")
+    @Pattern(regexp = "\\d{5,}", message = "Origin  code must have at least 5 digits")
     private String originCode;
     @NotNull
     @Pattern(regexp = "\\d{5,}", message = " destination code must have at least 5 digits")

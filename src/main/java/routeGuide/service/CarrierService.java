@@ -328,17 +328,13 @@ public class CarrierService {
             responseData.put("refreshToken", tokens.get("refreshToken"));
             responseData.put("userName",carrier.getUserName());
             responseData.put("userRole",carrier.getRole());
-
-
             return APIResponse.successToken("Login successful", responseData);
         }
 
         return APIResponse.errorBadRequest("User password is wrong");
     }
-
-
        public ResponseEntity<APIResponse> getAccessToken() {
-try {
+   try {
 
     Map<String, String> tokens = jwtService.generateTokens(ObjectUtil.getCarrier().getEmail());
 
