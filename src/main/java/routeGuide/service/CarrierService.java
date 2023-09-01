@@ -150,26 +150,47 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> updateCarrierInfo(UpdateCarrierDTO updateCarrierDTO,String carrierCode) {
 
-          Carrier carrierCheck=carrierRepository.findByCode(carrierCode);
-          if(carrierCheck==null )  {
+          Carrier updateCarrier=carrierRepository.findByCode(carrierCode);
+          if(updateCarrier==null )  {
               return  APIResponse.errorBadRequest("invalid Carrier enter valid carrier code");
           }
+           Carrier authCarrier=carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
+         if(  authCarrier==null){
+           return  APIResponse.errorUnauthorised(" user unauthorised");
+           }
 
-          Carrier user = carrierRepository.findByCode(ObjectUtil.getCarrier().getCode());
+        if (!authCarrier.getCode().equals( carrierCode) &&  (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
 
+            System.out.println(  authCarrier.getCode()+ "  "   + carrierCode );
+            System.out.println(!ObjectUtil.getCarrier().getCode().equals( carrierCode) );
 
-        if (ObjectUtil.getCarrier().getCode() != updateCarrierDTO.getCarrierCode() && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
-            return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
+                      return APIResponse.errorUnauthorised("you are not allow to update this carrier info..");
+        }
+        if(!carrierCode.equals(updateCarrierDTO.getCarrierCode())) {
+            Carrier updateCarrierCode = carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
+            if (updateCarrierCode != null) {
+                return APIResponse.errorBadRequest("given code is already registered give unique code");
+            }
+        }
+        if(!carrierCode.equals(updateCarrierDTO.getContactEmail())) {
+            Carrier updateCarrierCode = carrierRepository.findByCode(updateCarrierDTO.getContactEmail());
+            if (updateCarrierCode != null) {
+                return APIResponse.errorBadRequest("given email is already registered give unique email");
+            }
         }
 
-        Carrier updateCarrierCode=   carrierRepository.findByCode(updateCarrierDTO.getCarrierCode());
-        if(updateCarrierCode!=null){
-            return  APIResponse.errorBadRequest("given code is already registered give unique code");
-        }
 
-        Carrier carrier = new Carrier(updateCarrierDTO);
-        carrierRepository.save(carrier);
-        return APIResponse.successCreate("carrier added successfully ", carrier);
+         if(!updateCarrierDTO.getCarrierCode().equals(null)  ) {
+             updateCarrier.setCode(updateCarrierDTO.getCarrierCode());
+         }
+        if(!updateCarrierDTO.getCarrierCode().equals(null)) {
+            updateCarrier.setUserName(updateCarrierDTO.getCarrierName());
+        }
+        if(!updateCarrierDTO.getContactEmail().equals(null)) {
+            updateCarrier.setContactEmail(updateCarrierDTO.getContactEmail());
+        }
+        carrierRepository.save(updateCarrier);
+        return APIResponse.successCreate("carrier updated  successfully ", updateCarrier);
 
     }
 

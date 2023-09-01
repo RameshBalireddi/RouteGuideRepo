@@ -21,7 +21,7 @@ public class LoadDTO {
     private String originCode;
 
     @NotNull
-    @Pattern(regexp = "\\d{5,}", message = "Origin destination code must have at least 5 digits")
+    @Pattern(regexp = "\\d{5,}", message = "destination code must have at least 5 digits")
     private String  destinationCode;
 
     @NotNull(message = " mileage must not be null ")
