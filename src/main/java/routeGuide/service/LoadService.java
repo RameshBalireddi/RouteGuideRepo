@@ -47,43 +47,43 @@ public class LoadService {
     public ResponseEntity<APIResponse> addLoad(LoadDTO loadDTO) {
         Carrier carrier = carrierRepository.findByCode(loadDTO.getCarrierCode());
         if (carrier == null) {
-            return APIResponse.errorBadRequest("please enter valid carried code");
+            return APIResponse.errorBadRequest("carrier code invalid please enter valid carried code");
         }
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        return APIResponse.successCreate("load added successfully ", load);
+        return APIResponse.successCreate("carrier added load successfully ", loadDTO);
      }
 
     public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO) {
         Carrier carrier = carrierRepository.findByCode(loadDTO.getCarrierCode());
 
         if (carrier == null) {
-            return APIResponse.errorBadRequest("please enter valid carried code");
+            return APIResponse.errorBadRequest("given carrier code is invalid please enter valid carried code");
         }
-        if(!carrier.getRole().equals(UserRole.ADMIN)){
+        if(!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
             return APIResponse.errorUnauthorised("you are not allowed to create Carrier");
         }
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        return APIResponse.successCreate("load added successfully ", load);
+        return APIResponse.successCreate("admin added load successfully ", load);
     }
 
     public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO,int loadId) {
         Load load = loadRepository.findById(loadId).orElse(null);
         if (load == null) {
-            return APIResponse.errorBadRequest("please enter valid load Id");
+            return APIResponse.errorBadRequest("given load id is invalid so please enter valid load Id");
         }
 
         Carrier carrier = carrierRepository.findByCode(updateLoadDTO.getCarrierCode());
         if(carrier==null){
-            return  APIResponse.errorBadRequest("please enter valid  carrier code ");
+            return  APIResponse.errorBadRequest("given carrier code is invalid so please enter valid  carrier code ");
         }
         if(!load.getCarrier().getCode().equals(ObjectUtil.getCarrier().getCode()) && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)) ){
             System.out.println(!load.getCarrier().getCode().equals(ObjectUtil.getCarrier().getCode())  + "  "+ (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)));
            System.out.println(load.getCarrier().getCode() + " "+ObjectUtil.getCarrier().getCode());
-            return APIResponse.errorUnauthorised(" you are not allow to update this record");
+            return APIResponse.errorUnauthorised(" you are not allow to update this load record");
         }
 
 
@@ -106,6 +106,9 @@ public class LoadService {
             load.setStatus(updateLoadDTO.getStatus());
         }
          loadRepository.save(load);
+        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+            return APIResponse.success("admin load updated successfully",updateLoadDTO);
+        }
         return APIResponse.success("Load updated successfully", updateLoadDTO);
     }
 
@@ -120,7 +123,12 @@ public class LoadService {
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         loadRepository.delete(load);
-        return APIResponse.success("carrier delete successfully ", loadId);
+
+        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+            return APIResponse.success("admin deleted load successfully",loadId);
+        }
+
+        return APIResponse.success("carrier delete  load successfully ", loadId);
     }
     public ResponseEntity<APIResponse> getLoads(){
 
@@ -130,7 +138,7 @@ public class LoadService {
             return  APIResponse.errorBadRequest("you don't have any loads");
         }
         List<LoadResponse> loadResponses=loads.stream().map(l-> new LoadResponse(l)).collect(Collectors.toList());
-        return  APIResponse.success("carriers : ",loadResponses);
+        return  APIResponse.success("your loads : ",loadResponses);
     }
     public ResponseEntity<APIResponse> getAllLoads(){
 
@@ -140,7 +148,7 @@ public class LoadService {
             return  APIResponse.errorBadRequest("you don't have any loads");
         }
         List<LoadResponse> loadResponses=loads.stream().map(l-> new LoadResponse(l)).collect(Collectors.toList());
-        return  APIResponse.success("carriers : ",loadResponses);
+        return  APIResponse.success("all loads list : ",loadResponses);
     }
 
 

@@ -58,8 +58,6 @@ public class CarrierService {
             return APIResponse.errorBadRequest("given email is already registered enter new email");
         }
 
-
-
             Carrier carrier = new Carrier();
             carrier.setUserName(carrierDTO.getCarrierName());
             carrier.setCode(carrierDTO.getCarrierCode());
@@ -71,9 +69,7 @@ public class CarrierService {
 
             String encodedPassword = bCryptPasswordEncoder.encode(carrierDTO.getPassword());
             carrier.setPassword(encodedPassword);
-
             carrier.setRole(carrierDTO.getRole());
-
            carrierRepository.save(carrier);
 
            if(carrierDTO.getRole().equals(UserRole.ADMIN)){
@@ -123,10 +119,10 @@ public class CarrierService {
         carrierRepository.save(carrier);
 
         if(carrierDTO.getRole().equals(UserRole.ADMIN)){
-            return  APIResponse.successCreate("Admin added successfully ", carrierDTO);
+            return  APIResponse.successCreate("Admin added another admin  successfully ", carrierDTO);
         }
 
-        return APIResponse.successCreate("carrier added successfully ", carrierDTO);
+        return APIResponse.successCreate("admin added carrier successfully ", carrierDTO);
     }
 
 
@@ -137,13 +133,17 @@ public class CarrierService {
         Carrier carrier = carrierRepository.findByCode(code);
 
         if (carrier == null) {
-            return APIResponse.errorBadRequest("carrier code is not found enter valid carrier code");
+            return APIResponse.errorBadRequest("carrier code is not found enter valid carrier code to delete");
         }
         if (carrier.getId() != ObjectUtil.getCarrierId()  && (!ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN))) {
 
             return APIResponse.errorUnauthorised(" you are not allow to delete to this carrier");
         }
         carrierRepository.delete(carrier);
+        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+            return APIResponse.success("admin deleted carrier successfully",carrier.getUserName());
+        }
+
         return APIResponse.success("carrier delete successfully ", carrier.getUserName());
     }
 
@@ -190,6 +190,9 @@ public class CarrierService {
             updateCarrier.setContactEmail(updateCarrierDTO.getContactEmail());
         }
         carrierRepository.save(updateCarrier);
+        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+            return APIResponse.success("admin  updated carrier  successfully",updateCarrier);
+        }
         return APIResponse.successCreate("carrier updated  successfully ", updateCarrier);
 
     }
@@ -202,7 +205,10 @@ public class CarrierService {
             return APIResponse.errorBadRequest("you don't have any carrier");
         }
         CarrierResponse carrierResponse = new CarrierResponse(carrier);
-        return APIResponse.success("carriers : ", carrierResponse);
+        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+            return APIResponse.success("admin(you) :",carrierResponse);
+        }
+        return APIResponse.success("carrier (you) : ", carrierResponse);
     }
 
     public ResponseEntity<APIResponse> getAllCarriers() {
@@ -213,7 +219,7 @@ public class CarrierService {
             return APIResponse.errorBadRequest("currently don't have any carriers");
         }
         List<CarrierResponse> carrierResponses = carrierList.stream().map(c -> new CarrierResponse(c)).collect(Collectors.toList());
-        return APIResponse.success("carriers : ", carrierResponses);
+        return APIResponse.success("all carriers : ", carrierResponses);
     }
     public ResponseEntity<APIResponse> getAllAdmins() {
 
@@ -223,7 +229,7 @@ public class CarrierService {
             return APIResponse.errorBadRequest("currently don't have any admins");
         }
         List<CarrierResponse> carrierResponses = carrierList.stream().map(c -> new CarrierResponse(c)).collect(Collectors.toList());
-        return APIResponse.success("Admins : ", carrierResponses);
+        return APIResponse.success("all Admins : ", carrierResponses);
     }
 
 
