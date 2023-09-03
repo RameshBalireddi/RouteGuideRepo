@@ -52,7 +52,7 @@ public class LoadService {
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        return APIResponse.successCreate("carrier added load successfully ", loadDTO);
+        return APIResponse.successCreate("carrier added load successfully ", load);
      }
 
     public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO) {

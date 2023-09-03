@@ -51,5 +51,4 @@ public class ValidationExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-
 }

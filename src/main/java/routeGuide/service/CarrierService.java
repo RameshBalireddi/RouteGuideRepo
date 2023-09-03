@@ -44,10 +44,10 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> addCarrier(CarrierDTO carrierDTO) {
 
-        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
-        if (carrierName != null) {
-            return APIResponse.errorBadRequest("given name is already registered enter new name");
-        }
+//        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
+//        if (carrierName != null) {
+//            return APIResponse.errorBadRequest("given name is already registered enter new name");
+//        }
 
         Carrier carrierCode = carrierRepository.findByCode(carrierDTO.getCarrierCode());
         if (carrierCode != null) {
@@ -93,13 +93,7 @@ public class CarrierService {
         }
 
 
-        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
-        if (carrierName != null) {
-            return APIResponse.errorBadRequest("given name is already registered enter new name");
-        }
-
-
-        Carrier carrierEmail = carrierRepository.findByContactEmail(carrierDTO.getContactEmail());
+          Carrier carrierEmail = carrierRepository.findByContactEmail(carrierDTO.getContactEmail());
         if (carrierEmail != null) {
             return APIResponse.errorBadRequest("given email is already registered enter new email");
         }
