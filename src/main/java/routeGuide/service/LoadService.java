@@ -29,8 +29,10 @@ import routeGuide.repository.LoadRepository;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +54,13 @@ public class LoadService {
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        return APIResponse.successCreate("carrier added load successfully ", load);
+        int loadId=load.getId();
+        Map<String, Object> loadResponse = new HashMap<>();
+        loadResponse.put("loadId", loadId);
+        loadResponse.put("loadDTO", loadDTO);
+
+
+        return APIResponse.successCreate("carrier added load successfully " , loadResponse);
      }
 
     public ResponseEntity<APIResponse> addLoadFromAdmin(LoadDTO loadDTO) {
@@ -67,7 +75,12 @@ public class LoadService {
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        return APIResponse.successCreate("admin added load successfully ", load);
+
+       int loadId= load.getId();
+        Map<String, Object> loadResponse = new HashMap<>();
+        loadResponse.put("loadId", loadId);
+        loadResponse.put("loadDTO", loadDTO);
+        return APIResponse.successCreate("admin added load successfully with ID: " , loadResponse);
     }
 
     public ResponseEntity<APIResponse> updateLoad(UpdateLoadDTO updateLoadDTO,int loadId) {
