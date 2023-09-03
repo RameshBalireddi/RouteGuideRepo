@@ -54,10 +54,7 @@ public class LoadService {
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
-        int loadId=load.getId();
-        Map<String, Object> loadResponse = new HashMap<>();
-        loadResponse.put("loadId", loadId);
-        loadResponse.put("loadDTO", loadDTO);
+        LoadResponse loadResponse=new LoadResponse(load);
 
 
         return APIResponse.successCreate("carrier added load successfully " , loadResponse);
@@ -75,11 +72,12 @@ public class LoadService {
 
         Load load = new Load(loadDTO, carrier);
         loadRepository.save(load);
+        LoadResponse loadResponse=new LoadResponse(load);
 
-       int loadId= load.getId();
-        Map<String, Object> loadResponse = new HashMap<>();
-        loadResponse.put("loadId", loadId);
-        loadResponse.put("loadDTO", loadDTO);
+//       int loadId= load.getId();
+//        Map<String, Object> loadResponse = new HashMap<>();
+//        loadResponse.put("loadId", loadId);
+//        loadResponse.put("loadDTO", loadDTO);
         return APIResponse.successCreate("admin added load successfully with ID: " , loadResponse);
     }
 
