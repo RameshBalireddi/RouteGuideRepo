@@ -37,7 +37,7 @@ public class ValidationExceptionHandler {
 
     @ExceptionHandler(UnexpectedTypeException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidationException(UnexpectedTypeException ex) {
-        List<String> errors = Collections.singletonList("its must not be null "+ ex.getLocalizedMessage());
+        List<String> errors = Collections.singletonList(" nulls can't be accepted : "+ ex.getLocalizedMessage());
 
         ValidationErrorResponse errorResponse = new ValidationErrorResponse(Collections.singletonList(errors.toString()));
         return ResponseEntity.badRequest().body(errorResponse);

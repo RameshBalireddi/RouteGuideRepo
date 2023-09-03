@@ -17,4 +17,6 @@ public class UpdateCarrierDTO {
 
     @Email(message = "invalid email format please give valid email")
     private String contactEmail;
+
+
 }

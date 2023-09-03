@@ -19,7 +19,7 @@ import routeGuide.Response.CarrierResponse;
 import routeGuide.Security.ObjectUtil;
 import routeGuide.entities.Carrier;
 import routeGuide.repository.CarrierRepository;
-import routeGuide.Security.ApplicationUser;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,10 +119,10 @@ public class CarrierService {
         carrierRepository.save(carrier);
 
         if(carrierDTO.getRole().equals(UserRole.ADMIN)){
-            return  APIResponse.successCreate("Admin added another admin  successfully ", carrierDTO);
+            return  APIResponse.successCreate("Admin added  successfully ", carrierDTO);
         }
 
-        return APIResponse.successCreate("admin added carrier successfully ", carrierDTO);
+        return APIResponse.successCreate(" carrier added  successfully ", carrierDTO);
     }
 
 
@@ -190,9 +190,9 @@ public class CarrierService {
             updateCarrier.setContactEmail(updateCarrierDTO.getContactEmail());
         }
         carrierRepository.save(updateCarrier);
-        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
-            return APIResponse.success("admin  updated carrier  successfully",updateCarrier);
-        }
+//        if(ObjectUtil.getCarrier().getRole().equals(UserRole.ADMIN)){
+//            return APIResponse.success("admin  updated carrier  successfully",updateCarrier);
+//        }
         return APIResponse.successCreate("carrier updated  successfully ", updateCarrier);
 
     }
@@ -324,7 +324,7 @@ public class CarrierService {
             return APIResponse.errorBadRequest("Invalid user");
         }
 
-        if (passwordEncoder.matches(loginDTO.getPassword(), carrier.getPassword())) {
+        if (passwordEncoder.matches(loginDTO.getPassword(), carrier.getPassword())) { 
             // Generate tokens
             Map<String, String> tokens = jwtService.generateTokens(loginDTO.getEmail());
 

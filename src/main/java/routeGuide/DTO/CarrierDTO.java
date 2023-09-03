@@ -12,9 +12,9 @@ import routeGuide.entities.Carrier;
 @Data
 public class CarrierDTO {
 
-    @NotNull
+    @NotNull(message = "carrierName must not be null")
     private String carrierName;
-    @NotNull
+    @NotNull(message = "carrier code must not be null")
     private String carrierCode;
 
     @Email(message = "invalid email format")
