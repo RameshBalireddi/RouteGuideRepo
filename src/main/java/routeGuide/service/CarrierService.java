@@ -2,6 +2,7 @@ package routeGuide.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -44,11 +45,6 @@ public class CarrierService {
 
     public ResponseEntity<APIResponse> addCarrier(CarrierDTO carrierDTO) {
 
-//        Carrier carrierName = carrierRepository.findByUserName(carrierDTO.getCarrierName());
-//        if (carrierName != null) {
-//            return APIResponse.errorBadRequest("given name is already registered enter new name");
-//        }
-
         Carrier carrierCode = carrierRepository.findByCode(carrierDTO.getCarrierCode());
         if (carrierCode != null) {
             return APIResponse.errorBadRequest("carrier code already registered enter new code");
@@ -78,6 +74,7 @@ public class CarrierService {
 
         return APIResponse.successCreate("carrier added successfully ", carrierDTO);
     }
+
     private boolean isValidPassword(String password) {
         // Regular expression to check for at least one number, one capital letter, and one special character
         String passwordRegex = "^(?=.*\\d)(?=.*[A-Z])(?=.*[!@#$%^&*]).*$";
@@ -243,7 +240,14 @@ public class CarrierService {
 
                 Integer carrierId = (int) row.getCell(0).getNumericCellValue();
                 String carrierName = row.getCell(1).getStringCellValue();
-                String carrierCode = row.getCell(2).getStringCellValue();
+
+                String carrierCode;
+                if (row.getCell(2).getCellType() == CellType.NUMERIC) {
+                    carrierCode = String.valueOf((int) row.getCell(2).getNumericCellValue());
+                } else {
+                    carrierCode = row.getCell(2).getStringCellValue();
+                }
+//                String carrierCode = String.valueOf( row.getCell(2).getStringCellValue());
                 String carrierEmail = row.getCell(3).getStringCellValue();
                 String carrierPassword = row.getCell(4).getStringCellValue();
                 UserRole carrierRole = UserRole.valueOf(row.getCell(5).getStringCellValue());
