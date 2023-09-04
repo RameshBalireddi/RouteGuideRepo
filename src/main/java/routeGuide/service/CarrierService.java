@@ -247,7 +247,7 @@ public class CarrierService {
                 } else {
                     carrierCode = row.getCell(2).getStringCellValue();
                 }
-//                String carrierCode = String.valueOf( row.getCell(2).getStringCellValue());
+
                 String carrierEmail = row.getCell(3).getStringCellValue();
                 String carrierPassword = row.getCell(4).getStringCellValue();
                 UserRole carrierRole = UserRole.valueOf(row.getCell(5).getStringCellValue());
@@ -257,10 +257,18 @@ public class CarrierService {
                 Carrier existingCarrierWithEmail = carrierRepository.findByContactEmail(carrierEmail);
                 Carrier existingCarrierWithUserName = carrierRepository.findByUserName(carrierName);
 
-                if (existingCarrierWithCode != null || existingCarrierWithEmail != null || existingCarrierWithUserName != null) {
-
+                if (existingCarrierWithCode != null && existingCarrierWithCode.equals(carrierCode)) {
                     continue;
                 }
+
+                if (existingCarrierWithEmail != null && existingCarrierWithEmail.equals(carrierEmail)) {
+                 continue;
+                }
+
+                if (existingCarrierWithUserName != null && existingCarrierWithUserName.equals(carrierName)) {
+                  continue;
+                }
+
 
                 Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
                 if (carrier==null) {
@@ -277,7 +285,6 @@ public class CarrierService {
 
         return APIResponse.success("File uploaded successfully", fileType);
     }
-
 
     public void exportCarriers(HttpServletResponse response) throws IOException {
         List<Carrier> carriers = carrierRepository.findAll(); // Retrieve carrier data from the database
