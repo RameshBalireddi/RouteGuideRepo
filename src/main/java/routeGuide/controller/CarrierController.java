@@ -103,7 +103,7 @@ public class CarrierController {
             String fileType = getFileExtension(file.getOriginalFilename());
 
             if (fileType.equalsIgnoreCase("xlsx")) {
-                return carrierService.saveCarriers(file.getInputStream(), fileType);
+                return carrierService.importCarriers(file.getInputStream());
             } else {
                 return APIResponse.errorBadRequest("Invalid file format. Only .xlsx files are allowed.");
             }

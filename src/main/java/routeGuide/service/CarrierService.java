@@ -224,7 +224,7 @@ public class CarrierService {
     }
 
 
-    public ResponseEntity<APIResponse> saveCarriers(InputStream inputStream, String fileType) throws IOException {
+    public ResponseEntity<APIResponse> importCarriers(InputStream inputStream) throws IOException {
         boolean firstLine = true;
 
 
@@ -280,7 +280,7 @@ public class CarrierService {
                 carrierRepository.save(carrier);
             }
 
-            return APIResponse.success("File uploaded successfully", fileType);
+            return APIResponse.success("File uploaded successfully","imported carriers");
         }
 
     public void exportCarriers(HttpServletResponse response) throws IOException {
@@ -305,7 +305,7 @@ public class CarrierService {
             row.createCell(1).setCellValue(carrier.getUserName());
             row.createCell(2).setCellValue(carrier.getCode());
             row.createCell(3).setCellValue(carrier.getContactEmail());
-            row.createCell(4).setCellValue(carrier.getRole().toString());
+            row.createCell(4).setCellValue(String.valueOf(carrier.getRole().toString()));
         }
 
         // Get the ServletOutputStream from the response

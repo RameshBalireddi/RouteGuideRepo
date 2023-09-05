@@ -225,7 +225,7 @@ public class LoadService {
         headerRow.createCell(2).setCellValue("Destination Code");
         headerRow.createCell(3).setCellValue("Mileage");
         headerRow.createCell(4).setCellValue("Rate Per Mile");
-        headerRow.createCell(5).setCellValue("Carrier");
+        headerRow.createCell(5).setCellValue("Carrier ID");
         headerRow.createCell(6).setCellValue("Status");
         int rowNum = 1;
         for (Load load : loads) {
