@@ -4,9 +4,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +19,6 @@ import routeGuide.service.JwtService;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/carrier")
 public class CarrierController {
@@ -39,7 +38,7 @@ public class CarrierController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create/admin")
     public ResponseEntity<APIResponse> addCarrierFromAdmin(@RequestBody @Valid CarrierDTO carrierDTO){
-        return  carrierService.addCarrierFromAdmin(carrierDTO);
+              return  carrierService.addCarrierFromAdmin(carrierDTO);
     }
 
     @PostMapping("/login")
@@ -85,8 +84,9 @@ public class CarrierController {
 
      return  null;
     }
+
+    @GetMapping("/list/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/list/ADMIN")
     public  ResponseEntity<APIResponse> getAllAdmins() {
         try {
             return carrierService.getAllAdmins();
@@ -97,6 +97,7 @@ public class CarrierController {
         return  null;
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadCarriers(@RequestParam("file") MultipartFile file) {
         try {

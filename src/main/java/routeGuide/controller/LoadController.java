@@ -54,6 +54,7 @@ public class LoadController {
     public ResponseEntity<APIResponse> getAllLoads(){
         return loadService.getAllLoads();
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/import")
     public ResponseEntity<APIResponse> uploadLoads(@RequestParam("file") MultipartFile file) {
@@ -61,7 +62,7 @@ public class LoadController {
             String fileType = getFileExtension(file.getOriginalFilename());
 
             if (fileType.equalsIgnoreCase("xlsx")) {
-                return loadService.saveLoads(file.getInputStream(), fileType);
+                return loadService.importLoads(file.getInputStream(), fileType);
             } else {
                 return APIResponse.errorBadRequest("Invalid file format. Only .xlsx files are allowed.");
             }

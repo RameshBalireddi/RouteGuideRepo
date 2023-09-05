@@ -2,6 +2,7 @@ package routeGuide.service;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -164,7 +165,7 @@ public class LoadService {
 
 
 
-    public ResponseEntity<APIResponse> saveLoads(InputStream inputStream, String fileType) throws IOException {
+    public ResponseEntity<APIResponse> importLoads(InputStream inputStream, String fileType) throws IOException {
         boolean firstLine = true;
 
         if (fileType.endsWith("xlsx")) {
@@ -183,14 +184,20 @@ public class LoadService {
                 String destinationCode = String.valueOf((long) row.getCell(2).getNumericCellValue());
                 Double mileage = row.getCell(3).getNumericCellValue();
                 Double ratePerMile = row.getCell(4).getNumericCellValue();
-                Integer carrierId = (int) row.getCell(5).getNumericCellValue();
+                String carrierCode;
+                if (row.getCell(5).getCellType() == CellType.NUMERIC) {
+                    carrierCode = String.valueOf((int) row.getCell(2).getNumericCellValue());
+                } else {
+                    carrierCode = row.getCell(2).getStringCellValue();
+                }
+
+//                String carrierCode =  row.getCell(5).getStringCellValue();
                 LoadStatus loadStatus = LoadStatus.valueOf(row.getCell(6).getStringCellValue());
 
                 if (!originCode.matches("\\d{5,}") || !destinationCode.matches("\\d{5,}")) {
                                       continue;
                 }
-
-                Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
+                Carrier carrier = carrierRepository.findByCode(carrierCode);
                 if (carrier==null) {
                     continue;
                 }
@@ -213,6 +220,8 @@ public class LoadService {
         }
         return APIResponse.success("File uploaded successfully", fileType);
     }
+
+
     public void exportLoads(HttpServletResponse response) throws IOException {
         List<Load> loads = loadRepository.findAll();
 
@@ -225,8 +234,9 @@ public class LoadService {
         headerRow.createCell(2).setCellValue("Destination Code");
         headerRow.createCell(3).setCellValue("Mileage");
         headerRow.createCell(4).setCellValue("Rate Per Mile");
-        headerRow.createCell(5).setCellValue("Carrier ID");
+        headerRow.createCell(5).setCellValue("Carrier Id");
         headerRow.createCell(6).setCellValue("Status");
+
         int rowNum = 1;
         for (Load load : loads) {
             Row row = sheet.createRow(rowNum++);

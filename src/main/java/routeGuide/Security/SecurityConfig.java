@@ -80,13 +80,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
             .cors(customizer -> customizer.configurationSource(corsConfigurationSource()))
             .authorizeRequests()
             .requestMatchers("/carrier/signup","/carrier/login").permitAll()
-            .requestMatchers("/carrier/list").hasAuthority("ADMIN")
+             .and()
+             .exceptionHandling()
+            .accessDeniedHandler(accessDeniedHandler())
+            .and().authorizeRequests()
             .anyRequest().authenticated()
             .and()
-//            .formLogin(Customizer.withDefaults()) // Enable login form
-            .exceptionHandling()
-            .accessDeniedHandler(accessDeniedHandler())
-            .and()
+            .formLogin(Customizer.withDefaults()) // Enable login form
             .httpBasic(Customizer.withDefaults())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -118,7 +118,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.setContentType("application/json");
                 Map<String, String> errorMap = new HashMap<>();
-                errorMap.put("errorMessage", "you are not allowed to see this ");
+                errorMap.put("errorMessage", "you are not allowed  ");
                 response.getWriter().write(new ObjectMapper().writeValueAsString(errorMap));
             }
         };

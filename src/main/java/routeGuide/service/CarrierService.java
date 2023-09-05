@@ -238,6 +238,7 @@ public class CarrierService {
                 continue;
             }
 
+
             Integer carrierId = (int) row.getCell(0).getNumericCellValue();
             String carrierName = row.getCell(1).getStringCellValue();
 
