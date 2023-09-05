@@ -184,14 +184,15 @@ public class LoadService {
                 String destinationCode = String.valueOf((long) row.getCell(2).getNumericCellValue());
                 Double mileage = row.getCell(3).getNumericCellValue();
                 Double ratePerMile = row.getCell(4).getNumericCellValue();
-//                String carrierCode;
-//                if (row.getCell(5).getCellType() == CellType.NUMERIC) {
-//                    carrierCode = String.valueOf((int) row.getCell(5).getNumericCellValue());
-//                } else {
-//                    carrierCode = row.getCell(5).getStringCellValue();
-//                }
+                String carrierCode;
+                if (row.getCell(5).getCellType() == CellType.STRING) {
+                    carrierCode = row.getCell(5).getStringCellValue();
 
-                String carrierCode =  row.getCell(5).getStringCellValue();
+                } else {
+                    carrierCode = String.valueOf((int) row.getCell(5).getNumericCellValue());
+                }
+
+//                String carrierCode =  row.getCell(5).getStringCellValue();
                 LoadStatus loadStatus = LoadStatus.valueOf(row.getCell(6).getStringCellValue());
 
                 if (!originCode.matches("\\d{5,}") || !destinationCode.matches("\\d{5,}")) {
