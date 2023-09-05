@@ -228,63 +228,60 @@ public class CarrierService {
         boolean firstLine = true;
 
 
-            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
+        XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        Iterator<Row> rowIterator = sheet.iterator();
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            if (firstLine) {
+                firstLine = false;
+                continue;
+            }
 
-                Integer carrierId = (int) row.getCell(0).getNumericCellValue();
-                String carrierName = row.getCell(1).getStringCellValue();
+            Integer carrierId = (int) row.getCell(0).getNumericCellValue();
+            String carrierName = row.getCell(1).getStringCellValue();
 
-                String carrierCode;
-                if (row.getCell(2).getCellType() == CellType.NUMERIC) {
-                    carrierCode = String.valueOf((int) row.getCell(2).getNumericCellValue());
-                } else {
-                    carrierCode = row.getCell(2).getStringCellValue();
-                }
+            String carrierCode;
+            if (row.getCell(2).getCellType() == CellType.NUMERIC) {
+                carrierCode = String.valueOf((int) row.getCell(2).getNumericCellValue());
+            } else {
+                carrierCode = row.getCell(2).getStringCellValue();
+            }
 
-                String carrierEmail = row.getCell(3).getStringCellValue();
-                String carrierPassword = row.getCell(4).getStringCellValue();
-                UserRole carrierRole = UserRole.valueOf(row.getCell(5).getStringCellValue());
+            String carrierEmail = row.getCell(3).getStringCellValue();
+            String carrierPassword = row.getCell(4).getStringCellValue();
+            UserRole carrierRole = UserRole.valueOf(row.getCell(5).getStringCellValue());
 
-                // Check for duplicates based on code, email, and username
-                Carrier existingCarrierWithCode = carrierRepository.findByCode(carrierCode);
-                Carrier existingCarrierWithEmail = carrierRepository.findByContactEmail(carrierEmail);
-                Carrier existingCarrierWithUserName = carrierRepository.findByUserName(carrierName);
+            // Check for duplicates based on code, email
+            Carrier existingCarrierWithCode = carrierRepository.findByCode(carrierCode);
+            Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
+            if(carrier==null && existingCarrierWithCode!=null ){
+                continue;
+            }
 
-                if (existingCarrierWithCode != null && existingCarrierWithCode.equals(carrierCode)) {
-                    continue;
-                }
+            Carrier existingCarrierWithEmail = carrierRepository.findByContactEmail(carrierEmail);
+            if(carrier==null && existingCarrierWithEmail!=null ){
+                continue;
+            }
 
-                if (existingCarrierWithEmail != null && existingCarrierWithEmail.equals(carrierEmail)) {
-                 continue;
-                }
+            if (carrier == null) {
+                carrier = new Carrier();
 
-                if (existingCarrierWithUserName != null && existingCarrierWithUserName.equals(carrierName)) {
-                  continue;
-                }
-
-
-                Carrier carrier = carrierRepository.findById(carrierId).orElse(null);
-                if (carrier==null) {
-                    carrier = new Carrier();
-                    carrier.setId(carrierId);
-                }
+            }
                 carrier.setUserName(carrierName);
+            if(!carrierCode.equals(carrier.getCode())) {
                 carrier.setCode(carrierCode);
+            }
+            if(!carrierEmail.equals(carrier.getContactEmail())) {
                 carrier.setContactEmail(carrierEmail);
+            }
                 carrier.setPassword(bCryptPasswordEncoder.encode(carrierPassword));
                 carrier.setRole(carrierRole);
                 carrierRepository.save(carrier);
             }
 
-        return APIResponse.success("File uploaded successfully", fileType);
-    }
+            return APIResponse.success("File uploaded successfully", fileType);
+        }
 
     public void exportCarriers(HttpServletResponse response) throws IOException {
         List<Carrier> carriers = carrierRepository.findAll(); // Retrieve carrier data from the database
@@ -356,7 +353,7 @@ public class CarrierService {
     return APIResponse.success("Login successful", responseData);
    }catch (RuntimeException e){
     return  APIResponse.errorBadRequest("token not found ");
- }
+  }
     }
 
   }

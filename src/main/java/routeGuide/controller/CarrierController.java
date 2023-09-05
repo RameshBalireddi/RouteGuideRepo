@@ -117,8 +117,6 @@ public class CarrierController {
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex > 0) {
-            String filename=fileName.substring(lastDotIndex );
-            System.out.print(filename);
 
             return fileName.substring(lastDotIndex+1 );
         }
