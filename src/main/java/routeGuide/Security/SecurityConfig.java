@@ -86,8 +86,9 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
             .and().authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .formLogin(Customizer.withDefaults()) // Enable login form
-            .httpBasic(Customizer.withDefaults())
+//            .formLogin(Customizer.withDefaults()) // Enable login form
+//            .httpBasic(Customizer.withDefaults())
+            .authenticationProvider(authenticationProvider())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import routeGuide.APIResponse.APIResponse;
+import routeGuide.DTO.CarrierAdminDto;
 import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.LoginDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
@@ -82,7 +83,7 @@ public class CarrierService {
     }
 
 
-    public ResponseEntity<APIResponse> addCarrierFromAdmin(CarrierDTO carrierDTO) {
+    public ResponseEntity<APIResponse> addCarrierFromAdmin(CarrierAdminDto carrierDTO) {
 
         Carrier carrierCode = carrierRepository.findByCode(carrierDTO.getCarrierCode());
         if (carrierCode != null) {
@@ -94,24 +95,22 @@ public class CarrierService {
         if (carrierEmail != null) {
             return APIResponse.errorBadRequest("given email is already registered enter new email");
         }
-
-
-
         Carrier carrier = new Carrier();
         carrier.setUserName(carrierDTO.getCarrierName());
         carrier.setCode(carrierDTO.getCarrierCode());
         carrier.setContactEmail(carrierDTO.getContactEmail());
 
+
         String encodedPassword = bCryptPasswordEncoder.encode(carrierDTO.getPassword());
         carrier.setPassword(encodedPassword);
 
-        carrier.setRole(carrierDTO.getRole());
+        carrier.setRole(UserRole.CARRIER);
 
         carrierRepository.save(carrier);
 
-        if(carrierDTO.getRole().equals(UserRole.ADMIN)){
-            return  APIResponse.successCreate("Admin added  successfully ", carrierDTO);
-        }
+//        if(carrierDTO.getRole().equals(UserRole.ADMIN)){
+//            return  APIResponse.successCreate("Admin added  successfully ", carrierDTO);
+//        }
 
         return APIResponse.successCreate(" carrier added  successfully ", carrierDTO);
     }
@@ -237,7 +236,6 @@ public class CarrierService {
                 firstLine = false;
                 continue;
             }
-
 
             Integer carrierId = (int) row.getCell(0).getNumericCellValue();
             String carrierName = row.getCell(1).getStringCellValue();

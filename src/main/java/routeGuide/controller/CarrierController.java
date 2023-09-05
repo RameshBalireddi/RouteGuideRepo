@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import routeGuide.APIResponse.APIResponse;
+import routeGuide.DTO.CarrierAdminDto;
 import routeGuide.DTO.CarrierDTO;
 import routeGuide.DTO.LoginDTO;
 import routeGuide.DTO.UpdateCarrierDTO;
@@ -37,8 +38,8 @@ public class CarrierController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/create/admin")
-    public ResponseEntity<APIResponse> addCarrierFromAdmin(@RequestBody @Valid CarrierDTO carrierDTO){
-              return  carrierService.addCarrierFromAdmin(carrierDTO);
+    public ResponseEntity<APIResponse> addCarrierFromAdmin(@RequestBody @Valid CarrierAdminDto carrierAdminDto){
+              return  carrierService.addCarrierFromAdmin(carrierAdminDto);
     }
 
     @PostMapping("/login")

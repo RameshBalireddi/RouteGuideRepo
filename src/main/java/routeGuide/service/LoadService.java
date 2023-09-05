@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apache.poi.ss.usermodel.TableStyleType.headerRow;
+
 
 @Service
 public class LoadService {
@@ -179,6 +181,7 @@ public class LoadService {
                     continue;
                 }
 
+
                 Integer loadId = (int) row.getCell(0).getNumericCellValue();
                 String originCode = String.valueOf((long) row.getCell(1).getNumericCellValue());
                 String destinationCode = String.valueOf((long) row.getCell(2).getNumericCellValue());
@@ -191,7 +194,6 @@ public class LoadService {
                 } else {
                     carrierCode = String.valueOf((int) row.getCell(5).getNumericCellValue());
                 }
-
 //                String carrierCode =  row.getCell(5).getStringCellValue();
                 LoadStatus loadStatus = LoadStatus.valueOf(row.getCell(6).getStringCellValue());
 
@@ -221,7 +223,6 @@ public class LoadService {
         }
         return APIResponse.success("File uploaded successfully", fileType);
     }
-
 
     public void exportLoads(HttpServletResponse response) throws IOException {
         List<Load> loads = loadRepository.findAll();
