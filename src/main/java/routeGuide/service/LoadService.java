@@ -186,9 +186,9 @@ public class LoadService {
                 Double ratePerMile = row.getCell(4).getNumericCellValue();
                 String carrierCode;
                 if (row.getCell(5).getCellType() == CellType.NUMERIC) {
-                    carrierCode = String.valueOf((int) row.getCell(2).getNumericCellValue());
+                    carrierCode = String.valueOf((int) row.getCell(5).getNumericCellValue());
                 } else {
-                    carrierCode = row.getCell(2).getStringCellValue();
+                    carrierCode = row.getCell(5).getStringCellValue();
                 }
 
 //                String carrierCode =  row.getCell(5).getStringCellValue();
