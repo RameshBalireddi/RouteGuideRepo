@@ -83,11 +83,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http,JwtAuthFilter j
             .requestMatchers("/carrier/list").hasAuthority("ADMIN")
             .anyRequest().authenticated()
             .and()
-//            .formLogin(Customizer.withDefaults()) // Enable login form
+            .formLogin(Customizer.withDefaults()) // Enable login form
             .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
             .and()
-            .httpBasic(Customizer.withDefaults())
+//            .httpBasic(Customizer.withDefaults())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
